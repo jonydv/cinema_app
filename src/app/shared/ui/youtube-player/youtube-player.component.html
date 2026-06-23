@@ -1,0 +1,13 @@
+@if (videoKey()) {
+  <lite-youtube
+    [videoid]="videoKey()!"
+    class="w-full rounded-lg"
+    [attr.playlabel]="'movie.watchTrailer' | transloco"
+  ></lite-youtube>
+} @else {
+  <div
+    class="flex aspect-video w-full items-center justify-center rounded-lg bg-[var(--color-skeleton)] text-[var(--color-text-secondary)]"
+  >
+    <span>Sin trailer disponible</span>
+  </div>
+}

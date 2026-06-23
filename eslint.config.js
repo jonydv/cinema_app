@@ -2,6 +2,7 @@
 const tseslint = require('@typescript-eslint/eslint-plugin')
 const tsParser = require('@typescript-eslint/parser')
 const angularEslint = require('@angular-eslint/eslint-plugin')
+const angularTemplateEslint = require('@angular-eslint/eslint-plugin-template')
 const angularTemplateParser = require('@angular-eslint/template-parser')
 const importPlugin = require('eslint-plugin-import')
 const prettierConfig = require('eslint-config-prettier')
@@ -33,7 +34,7 @@ module.exports = [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@angular-eslint/no-input-rename': 'error',
       '@angular-eslint/use-lifecycle-interface': 'error',
-      '@angular-eslint/component-class-suffix': 'error',
+      '@angular-eslint/component-class-suffix': ['error', { suffixes: ['Component', 'Page'] }],
       '@angular-eslint/directive-class-suffix': 'error',
       'import/order': [
         'warn',
@@ -66,6 +67,7 @@ module.exports = [
     },
     plugins: {
       '@angular-eslint': angularEslint,
+      '@angular-eslint/template': angularTemplateEslint,
     },
     rules: {
       '@angular-eslint/template/no-negated-async': 'error',

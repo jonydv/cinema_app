@@ -1,0 +1,47 @@
+@if (isOpen()) {
+  <!-- Overlay -->
+  <div
+    class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm"
+    aria-hidden="true"
+    (click)="close()"
+  ></div>
+
+  <!-- Sheet panel -->
+  <div
+    #sheet
+    role="dialog"
+    [attr.aria-label]="label()"
+    aria-modal="true"
+    class="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-[var(--color-surface)] shadow-2xl"
+  >
+    <!-- Drag handle -->
+    <div class="flex justify-center pb-2 pt-3">
+      <div class="h-1 w-10 rounded-full bg-[var(--color-border)]" aria-hidden="true"></div>
+    </div>
+
+    <!-- Close button -->
+    <button
+      type="button"
+      class="absolute right-4 top-3 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--color-text-secondary)] md:hover:text-[var(--color-text-primary)]"
+      [attr.aria-label]="'a11y.closeDialog' | transloco"
+      (click)="close()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Projected content -->
+    <div class="max-h-[70dvh] overflow-y-auto px-4 pb-6 pt-2">
+      <ng-content />
+    </div>
+  </div>
+}

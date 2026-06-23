@@ -1,0 +1,58 @@
+<article
+  class="relative flex flex-col overflow-hidden rounded-lg bg-[var(--color-surface)] shadow-sm transition-shadow md:hover:shadow-lg"
+  [attr.aria-label]="'a11y.movieCard' | transloco: { title: movie().title }"
+>
+  <a
+    [routerLink]="['/movie', movie().id]"
+    class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)]"
+  >
+    <div class="relative aspect-[2/3] w-full overflow-hidden bg-[var(--color-skeleton)]">
+      <img
+        [ngSrc]="movie().posterUrl"
+        [alt]="'a11y.posterAlt' | transloco: { title: movie().title }"
+        width="300"
+        height="450"
+        class="h-full w-full object-cover md:hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1 p-2">
+      <h2 class="line-clamp-2 text-sm font-semibold leading-tight text-[var(--color-text-primary)]">
+        {{ movie().title }}
+      </h2>
+      <div class="flex items-center justify-between text-xs text-[var(--color-text-secondary)]">
+        <span>{{ movie().releaseYear }}</span>
+        <span class="flex items-center gap-0.5">
+          <span aria-hidden="true">★</span>
+          <span>{{ movie().rating }}</span>
+        </span>
+      </div>
+    </div>
+  </a>
+
+  <!-- Favorite button — min 48×48 touch target -->
+  <button
+    type="button"
+    class="absolute right-1 top-1 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors md:hover:bg-[var(--color-primary)]"
+    [attr.aria-label]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
+    [attr.aria-pressed]="isFavorite()"
+    (click)="onFavoriteClick($event)"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      [attr.fill]="isFavorite() ? 'currentColor' : 'none'"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+      />
+    </svg>
+  </button>
+</article>

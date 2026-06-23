@@ -1,0 +1,98 @@
+<!-- Skip navigation link (keyboard a11y) -->
+<a
+  href="#main-content"
+  class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-[var(--color-primary)] focus:px-4 focus:py-2 focus:text-white focus:no-underline"
+>
+  {{ 'nav.skip' | transloco }}
+</a>
+
+<!-- Top Navbar — desktop only -->
+<header
+  class="hidden md:fixed md:left-0 md:right-0 md:top-0 md:z-30 md:flex md:h-20 md:items-center md:justify-between md:border-b md:border-[var(--color-border)] md:bg-[var(--color-bg)] md:px-6 md:shadow-sm"
+>
+  <a
+    routerLink="/"
+    class="text-xl font-bold text-[var(--color-primary)]"
+    aria-label="MovieApp — Inicio"
+  >
+    MovieApp
+  </a>
+
+  <nav aria-label="Navegación principal">
+    <ul class="flex items-center gap-6">
+      @for (item of navItems; track item.path) {
+        <li>
+          <a
+            [routerLink]="item.path"
+            [routerLinkActiveOptions]="{ exact: item.exact }"
+            routerLinkActive="text-[var(--color-primary)] font-semibold"
+            class="text-sm text-[var(--color-text-secondary)] transition-colors md:hover:text-[var(--color-text-primary)]"
+          >
+            {{ item.label | transloco }}
+          </a>
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <div class="flex items-center gap-3">
+    <!-- Theme toggle -->
+    <button
+      type="button"
+      class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[var(--color-text-secondary)] transition-colors md:hover:text-[var(--color-text-primary)]"
+      [attr.aria-label]="'theme.toggle' | transloco"
+      (click)="themeService.toggle()"
+    >
+      {{ themeService.theme() === 'dark' ? '☀️' : '🌙' }}
+    </button>
+  </div>
+</header>
+
+<!-- Main content area — padded to clear navbar/bottom-bar -->
+<main id="main-content" class="min-h-dvh pb-20 md:pb-0 md:pt-20" tabindex="-1">
+  <router-outlet />
+</main>
+
+<!-- Bottom Tab Bar — mobile only -->
+<nav
+  class="fixed bottom-0 left-0 right-0 z-30 flex h-16 items-center justify-around border-t border-[var(--color-border)] bg-[var(--color-bg)] md:hidden"
+  aria-label="Navegación principal"
+>
+  @for (item of navItems; track item.path) {
+    <a
+      [routerLink]="item.path"
+      [routerLinkActiveOptions]="{ exact: item.exact }"
+      routerLinkActive="text-[var(--color-primary)]"
+      class="relative flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-0.5 text-xs text-[var(--color-text-secondary)]"
+    >
+      <span class="text-xl" aria-hidden="true">{{ item.icon }}</span>
+      <span>{{ item.label | transloco }}</span>
+
+      <!-- Favorites count badge -->
+      @if (item.path === '/favorites' && favoritesStore.count() > 0) {
+        <span
+          class="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-primary)] px-1 text-[10px] font-bold text-white"
+          aria-hidden="true"
+        >
+          {{ favoritesStore.count() > 99 ? '99+' : favoritesStore.count() }}
+        </span>
+      }
+    </a>
+  }
+
+  <!-- Theme toggle (mobile — inline in bar) -->
+  <button
+    type="button"
+    class="flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-0.5 text-xs text-[var(--color-text-secondary)]"
+    [attr.aria-label]="'theme.toggle' | transloco"
+    (click)="themeService.toggle()"
+  >
+    <span class="text-xl" aria-hidden="true">{{
+      themeService.theme() === 'dark' ? '☀️' : '🌙'
+    }}</span>
+    <span>{{ 'nav.settings' | transloco }}</span>
+  </button>
+</nav>
+
+<!-- Toast outlet — rendered once here, visible everywhere -->
+<app-toast />
