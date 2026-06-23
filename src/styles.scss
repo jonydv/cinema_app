@@ -1,1 +1,71 @@
-/* You can add global styles to this file, and also import other style files */
+/* ── Design tokens (Light mode) ─────────────────────────────────────────── */
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #f5f5f5;
+  --color-primary: #e50914;
+  --color-primary-hover: #c5070f;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #6b7280;
+  --color-border: #e5e7eb;
+  --color-skeleton: #e5e7eb;
+
+  /* Touch-safe: avoid sticking hover on iOS by targeting hover-capable devices */
+  @media (hover: hover) {
+    --hover-scale: 1.03;
+  }
+}
+
+/* ── Design tokens (Dark mode) ──────────────────────────────────────────── */
+[data-theme='dark'] {
+  --color-bg: #141414;
+  --color-surface: #1f1f1f;
+  --color-primary: #e50914;
+  --color-primary-hover: #ff1a24;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #9ca3af;
+  --color-border: #374151;
+  --color-skeleton: #374151;
+}
+
+/* ── Base resets ────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  line-height: 1.5;
+  min-height: 100dvh;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ── Scrollbar utility ──────────────────────────────────────────────────── */
+.scrollbar-hide {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ── Focus ring (keyboard navigation only) ──────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}

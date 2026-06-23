@@ -5,10 +5,26 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "serve:ssr:movie-app-v2": "node dist/movie-app-v2/server/server.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test",
+    "lint": "eslint \"src/**/*.{ts,html}\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "serve:ssr": "node dist/movie-app-v2/server/server.mjs",
     "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,html}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,json,md}": [
+      "prettier --write"
+    ]
   },
   "private": true,
   "packageManager": "npm@11.4.2",
@@ -36,6 +52,7 @@
     "@angular/compiler-cli": "^21.2.0",
     "@commitlint/cli": "^21.1.0",
     "@commitlint/config-conventional": "^21.1.0",
+    "@tailwindcss/postcss": "^4.3.1",
     "@types/express": "^5.0.1",
     "@types/node": "^20.17.19",
     "@typescript-eslint/eslint-plugin": "^8.62.0",
