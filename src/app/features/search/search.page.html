@@ -1,0 +1,66 @@
+<div class="px-4 pt-4 pb-24 md:px-6 md:pt-6 md:pb-8">
+  <h1 class="sr-only" tabindex="-1">{{ 'nav.search' | transloco }}</h1>
+
+  <!-- Search bar -->
+  <div class="mb-4">
+    <app-search-bar [initialValue]="q()" (search)="onSearch($event)" />
+  </div>
+
+  <!-- Result count -->
+  @if (facade.query() && !facade.isLoading() && facade.results().length > 0) {
+    <p class="mb-3 text-sm text-[var(--color-text-secondary)]">
+      {{ 'search.resultsFor' | transloco }}
+      <span class="font-semibold text-[var(--color-text-primary)]">"{{ facade.query() }}"</span>
+    </p>
+  }
+
+  <!-- Results grid -->
+  <div class="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+    @for (movie of facade.results(); track movie.id) {
+      <app-movie-card
+        [movie]="movie"
+        [isFavorite]="facade.isFavorite(movie.id)"
+        (favoriteToggled)="facade.toggleFavorite($event)"
+      />
+    }
+
+    @if (facade.isLoading()) {
+      @for (i of skeletonRange; track i) {
+        <app-skeleton-card />
+      }
+    }
+  </div>
+
+  <!-- Empty: searched but no results -->
+  @if (!facade.isLoading() && facade.query() && facade.results().length === 0) {
+    <app-empty-state
+      icon="🔍"
+      [title]="'search.noResults' | transloco"
+      [subtitle]="facade.query()"
+    />
+  }
+
+  <!-- Idle: no query yet -->
+  @if (!facade.query() && !facade.isLoading()) {
+    <div
+      class="flex flex-col items-center justify-center gap-3 py-16 text-[var(--color-text-secondary)]"
+    >
+      <svg
+        class="h-16 w-16 opacity-30"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        />
+      </svg>
+      <p class="text-sm">{{ 'search.placeholder' | transloco }}</p>
+    </div>
+  }
+</div>
