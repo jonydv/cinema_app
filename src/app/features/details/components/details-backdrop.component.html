@@ -1,0 +1,75 @@
+<!-- Backdrop with gradient + title overlay -->
+<div
+  class="relative aspect-[16/9] w-full overflow-hidden bg-[var(--color-skeleton)] md:aspect-[21/9]"
+>
+  @if (movie().backdropUrl) {
+    <img
+      [src]="movie().backdropUrl"
+      [alt]="'a11y.backdropAlt' | transloco: { title: movie().title }"
+      class="h-full w-full object-cover"
+      fetchpriority="high"
+    />
+  }
+
+  <!-- Gradient overlay from bottom -->
+  <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+  <!-- Title + tagline overlaid at bottom -->
+  <div class="absolute bottom-0 left-0 right-0 p-4 md:p-6">
+    <h1 class="line-clamp-3 text-2xl font-bold text-white drop-shadow-lg md:text-4xl" tabindex="-1">
+      {{ movie().title }}
+    </h1>
+    @if (movie().tagline) {
+      <p class="mt-1 text-sm italic text-white/70 md:text-base">{{ movie().tagline }}</p>
+    }
+  </div>
+
+  <!-- Favorite button — top right, min 48×48 touch target -->
+  <button
+    type="button"
+    class="absolute right-3 top-3 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-sm transition-colors md:hover:bg-[var(--color-primary)]"
+    [attr.aria-label]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
+    [attr.aria-pressed]="isFavorite()"
+    (click)="onFavoriteClick()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      [attr.fill]="isFavorite() ? 'currentColor' : 'none'"
+      stroke="currentColor"
+      stroke-width="2"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+      />
+    </svg>
+  </button>
+</div>
+
+<!-- Metadata chips row -->
+<div class="flex flex-wrap items-center gap-2 px-4 py-3 md:px-6">
+  @for (genre of movie().genres; track genre) {
+    <span
+      class="rounded-full bg-[var(--color-surface)] px-3 py-1 text-xs text-[var(--color-text-secondary)]"
+    >
+      {{ genre }}
+    </span>
+  }
+
+  <div class="ml-auto flex items-center gap-3 text-sm">
+    <span class="flex items-center gap-0.5 font-semibold text-[var(--color-primary)]">
+      <span aria-hidden="true">★</span>
+      {{ ratingDisplay() }}
+    </span>
+    <span class="text-[var(--color-text-secondary)]">{{ movie().releaseYear }}</span>
+    @if (movie().runtime) {
+      <span class="text-[var(--color-text-secondary)]"
+        >{{ movie().runtime }}&nbsp;{{ 'movie.minutes' | transloco }}</span
+      >
+    }
+  </div>
+</div>
