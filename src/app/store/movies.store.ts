@@ -1,14 +1,13 @@
-import { inject } from '@angular/core'
-import { computed } from '@angular/core'
+import { computed, inject } from '@angular/core'
 
-import { EMPTY, pipe } from 'rxjs'
+import { EMPTY, Observable, pipe } from 'rxjs'
 import { catchError, switchMap, tap } from 'rxjs/operators'
 
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
 
 import { TmdbService } from '@data/api/tmdb.service'
-import { Movie } from '@data/models/movie.model'
+import { Movie, PagedMovies } from '@data/models/movie.model'
 
 interface MoviesState {
   movies: Movie[]
@@ -31,57 +30,67 @@ const initialState: MoviesState = {
 export const MoviesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ movies, currentPage, totalPages }) => ({
+  withComputed(({ currentPage, totalPages }) => ({
     hasMore: computed(() => currentPage() < totalPages()),
-    moviesCount: computed(() => movies().length),
   })),
-  withMethods((store, tmdbService = inject(TmdbService)) => ({
-    loadMovies: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true, movies: [], currentPage: 1 })),
-        switchMap(() =>
-          tmdbService.getPopularMovies(1).pipe(
-            tap(({ movies, totalPages }) =>
-              patchState(store, { movies, totalPages, currentPage: 1, isLoading: false }),
+  withMethods((store, tmdbService = inject(TmdbService)) => {
+    const fetchPage = (page: number): Observable<PagedMovies> => {
+      const genre = store.activeGenre()
+      const sort = store.sortBy()
+      if (genre !== null || sort !== 'popularity.desc') {
+        return tmdbService.getDiscoverMovies(page, genre, sort)
+      }
+      return tmdbService.getPopularMovies(page)
+    }
+
+    return {
+      loadMovies: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true, movies: [], currentPage: 1 })),
+          switchMap(() =>
+            fetchPage(1).pipe(
+              tap(({ movies, totalPages }) =>
+                patchState(store, { movies, totalPages, currentPage: 1, isLoading: false }),
+              ),
+              catchError(() => {
+                patchState(store, { isLoading: false })
+                return EMPTY
+              }),
             ),
-            catchError(() => {
-              patchState(store, { isLoading: false })
-              return EMPTY
-            }),
           ),
         ),
       ),
-    ),
 
-    loadMore: rxMethod<void>(
-      pipe(
-        tap(() => patchState(store, { isLoading: true })),
-        switchMap(() => {
-          const nextPage = store.currentPage() + 1
-          return tmdbService.getPopularMovies(nextPage).pipe(
-            tap(({ movies, totalPages }) =>
-              patchState(store, (state) => ({
-                movies: [...state.movies, ...movies],
-                totalPages,
-                currentPage: nextPage,
-                isLoading: false,
-              })),
-            ),
-            catchError(() => {
-              patchState(store, { isLoading: false })
-              return EMPTY
-            }),
-          )
-        }),
+      loadMore: rxMethod<void>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true })),
+          switchMap(() => {
+            const nextPage = store.currentPage() + 1
+            return fetchPage(nextPage).pipe(
+              tap(({ movies, totalPages }) =>
+                patchState(store, (state) => ({
+                  movies: [...state.movies, ...movies],
+                  totalPages,
+                  currentPage: nextPage,
+                  isLoading: false,
+                })),
+              ),
+              catchError(() => {
+                patchState(store, { isLoading: false })
+                return EMPTY
+              }),
+            )
+          }),
+        ),
       ),
-    ),
 
-    setGenre(id: number | null): void {
-      patchState(store, { activeGenre: id })
-    },
+      setGenre(id: number | null): void {
+        patchState(store, { activeGenre: id })
+      },
 
-    setSortBy(sort: string): void {
-      patchState(store, { sortBy: sort })
-    },
-  })),
+      setSortBy(sort: string): void {
+        patchState(store, { sortBy: sort })
+      },
+    }
+  }),
 )

@@ -34,6 +34,30 @@ export class TmdbService {
       )
   }
 
+  getDiscoverMovies(
+    page = 1,
+    genreId: number | null = null,
+    sortBy = 'popularity.desc',
+  ): Observable<PagedMovies> {
+    const params: Record<string, string> = {
+      page: String(page),
+      sort_by: sortBy,
+      include_adult: 'false',
+    }
+    if (genreId !== null) {
+      params['with_genres'] = String(genreId)
+    }
+    return this.http
+      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/discover/movie`, { params })
+      .pipe(
+        map((res) => ({
+          movies: res.results.map(adaptMovie),
+          totalPages: res.total_pages,
+          totalResults: res.total_results,
+        })),
+      )
+  }
+
   getMovieDetails(id: number): Observable<MovieDetail> {
     return forkJoin({
       detail: this.http.get<TmdbMovieDetailDto>(`${this.base}/movie/${id}`),

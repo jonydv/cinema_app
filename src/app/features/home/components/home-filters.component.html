@@ -1,0 +1,91 @@
+<!-- FAB: visible only on mobile, fixed above bottom tab bar -->
+<button
+  type="button"
+  class="fixed bottom-[76px] right-4 z-10 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-lg transition-transform active:scale-95 md:hidden"
+  (click)="open()"
+  [attr.aria-label]="'filters.title' | transloco"
+>
+  <svg
+    class="size-5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M3 4h18M7 8h10M11 12h2M11 16h2"
+    />
+  </svg>
+</button>
+
+<!-- Desktop inline filter bar -->
+<div class="mb-4 hidden flex-wrap items-center gap-3 md:flex">
+  <div class="flex flex-wrap gap-2">
+    @for (genre of genres; track genre.label) {
+      <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
+        {{ genre.label }}
+      </button>
+    }
+  </div>
+
+  <select
+    class="ml-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+    [value]="facade.sortBy()"
+    (change)="onSortChange($event)"
+    [attr.aria-label]="'filters.sortBy' | transloco"
+  >
+    @for (opt of sortOptions; track opt.value) {
+      <option [value]="opt.value">{{ opt.labelKey | transloco }}</option>
+    }
+  </select>
+</div>
+
+<!-- Mobile Bottom Sheet -->
+<app-bottom-sheet [isOpen]="isOpen()" [label]="'filters.title' | transloco" (closed)="close()">
+  <div class="flex flex-col gap-6 pb-2">
+    <section>
+      <h3 class="mb-3 font-semibold text-[var(--color-text-primary)]">
+        {{ 'filters.genre' | transloco }}
+      </h3>
+      <div class="flex flex-wrap gap-2">
+        @for (genre of genres; track genre.label) {
+          <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
+            {{ genre.label }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <section>
+      <h3 class="mb-3 font-semibold text-[var(--color-text-primary)]">
+        {{ 'filters.sortBy' | transloco }}
+      </h3>
+      <div class="flex flex-col">
+        @for (opt of sortOptions; track opt.value) {
+          <button type="button" [class]="sortRowClass(opt.value)" (click)="selectSort(opt.value)">
+            <span>{{ opt.labelKey | transloco }}</span>
+            @if (facade.sortBy() === opt.value) {
+              <svg
+                class="size-4 shrink-0"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            }
+          </button>
+        }
+      </div>
+    </section>
+  </div>
+</app-bottom-sheet>
