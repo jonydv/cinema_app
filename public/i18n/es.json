@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "search": "Buscar",
+    "favorites": "Favoritos",
+    "settings": "Ajustes",
+    "skip": "Saltar al contenido principal"
+  },
+  "home": {
+    "title": "Películas populares",
+    "loadMore": "Cargar más"
+  },
+  "search": {
+    "placeholder": "Buscar películas...",
+    "resultsFor": "Resultados para",
+    "noResults": "Sin resultados para"
+  },
+  "movie": {
+    "addFavorite": "Añadir a favoritos",
+    "removeFavorite": "Quitar de favoritos",
+    "watchTrailer": "Ver trailer",
+    "cast": "Reparto",
+    "genres": "Géneros",
+    "runtime": "Duración",
+    "minutes": "min",
+    "rating": "Puntuación",
+    "releaseYear": "Año"
+  },
+  "favorites": {
+    "title": "Mis favoritos",
+    "clearAll": "Vaciar lista",
+    "confirmClear": "¿Vaciar toda la lista de favoritos?"
+  },
+  "filters": {
+    "title": "Filtros",
+    "genre": "Género",
+    "sortBy": "Ordenar por",
+    "popularity": "Popularidad",
+    "rating": "Puntuación",
+    "releaseDate": "Fecha de estreno",
+    "apply": "Aplicar",
+    "reset": "Resetear"
+  },
+  "empty": {
+    "favorites": "Aún no tienes favoritos",
+    "favoritesSubtitle": "Marca películas con ♡ para guardarlas aquí",
+    "search": "Sin resultados para",
+    "searchSubtitle": "Prueba con otro término de búsqueda",
+    "error": "No se pudo cargar el contenido"
+  },
+  "errors": {
+    "notFound": "Contenido no encontrado",
+    "serverError": "Error del servidor. Inténtalo más tarde.",
+    "noInternet": "Sin conexión a internet.",
+    "sessionExpired": "Sesión expirada.",
+    "unexpected": "Algo salió mal. Inténtalo de nuevo."
+  },
+  "theme": {
+    "light": "Tema claro",
+    "dark": "Tema oscuro",
+    "toggle": "Cambiar tema"
+  },
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "select": "Idioma"
+  },
+  "a11y": {
+    "movieCard": "Película: {{ title }}",
+    "posterAlt": "Póster de {{ title }}",
+    "backdropAlt": "Imagen de fondo de {{ title }}",
+    "profileAlt": "Foto de {{ name }}",
+    "closeDialog": "Cerrar",
+    "loading": "Cargando..."
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "subtitle": "El contenido que buscas no existe o fue movido.",
+    "goHome": "Volver al inicio"
+  }
+}

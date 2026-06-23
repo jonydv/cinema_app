@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "search": "Search",
+    "favorites": "Favorites",
+    "settings": "Settings",
+    "skip": "Skip to main content"
+  },
+  "home": {
+    "title": "Popular Movies",
+    "loadMore": "Load more"
+  },
+  "search": {
+    "placeholder": "Search movies...",
+    "resultsFor": "Results for",
+    "noResults": "No results for"
+  },
+  "movie": {
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "watchTrailer": "Watch trailer",
+    "cast": "Cast",
+    "genres": "Genres",
+    "runtime": "Runtime",
+    "minutes": "min",
+    "rating": "Rating",
+    "releaseYear": "Year"
+  },
+  "favorites": {
+    "title": "My Favorites",
+    "clearAll": "Clear all",
+    "confirmClear": "Clear the entire favorites list?"
+  },
+  "filters": {
+    "title": "Filters",
+    "genre": "Genre",
+    "sortBy": "Sort by",
+    "popularity": "Popularity",
+    "rating": "Rating",
+    "releaseDate": "Release date",
+    "apply": "Apply",
+    "reset": "Reset"
+  },
+  "empty": {
+    "favorites": "No favorites yet",
+    "favoritesSubtitle": "Mark movies with ♡ to save them here",
+    "search": "No results for",
+    "searchSubtitle": "Try a different search term",
+    "error": "Could not load content"
+  },
+  "errors": {
+    "notFound": "Content not found",
+    "serverError": "Server error. Please try again later.",
+    "noInternet": "No internet connection.",
+    "sessionExpired": "Session expired.",
+    "unexpected": "Something went wrong. Please try again."
+  },
+  "theme": {
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "toggle": "Toggle theme"
+  },
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "select": "Language"
+  },
+  "a11y": {
+    "movieCard": "Movie: {{ title }}",
+    "posterAlt": "Poster for {{ title }}",
+    "backdropAlt": "Backdrop image for {{ title }}",
+    "profileAlt": "Photo of {{ name }}",
+    "closeDialog": "Close",
+    "loading": "Loading..."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "subtitle": "The content you are looking for doesn't exist or was moved.",
+    "goHome": "Go back home"
+  }
+}

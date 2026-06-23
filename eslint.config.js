@@ -42,6 +42,7 @@ module.exports = [
           pathGroups: [
             { pattern: '@angular/**', group: 'external', position: 'before' },
             { pattern: '@ngrx/**', group: 'external', position: 'after' },
+            { pattern: '@ngneat/**', group: 'external', position: 'after' },
             { pattern: '@core/**', group: 'internal', position: 'before' },
             { pattern: '@data/**', group: 'internal' },
             { pattern: '@store/**', group: 'internal' },
@@ -49,6 +50,7 @@ module.exports = [
             { pattern: '@shared/**', group: 'internal', position: 'after' },
             { pattern: '@env/**', group: 'internal', position: 'after' },
           ],
+          pathGroupsExcludedImportTypes: [],
           'newlines-between': 'always',
           alphabetize: { order: 'asc' },
         },

@@ -1,8 +1,17 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http'
-import { ApplicationConfig, ErrorHandler, provideBrowserGlobalErrorListeners } from '@angular/core'
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  isDevMode,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core'
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser'
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router'
+
+import { provideTransloco } from '@ngneat/transloco'
+
 import { GlobalErrorHandler } from '@core/handlers/global-error.handler'
+import { TranslocoHttpLoader } from '@core/i18n/transloco-http-loader'
 import { authApiInterceptor } from '@core/interceptors/auth-api.interceptor'
 import { errorInterceptor } from '@core/interceptors/error.interceptor'
 import { retryInterceptor } from '@core/interceptors/retry.interceptor'
@@ -16,9 +25,17 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideHttpClient(
       withFetch(),
-      // Order matters: retry fires first, then error notification on final failure
       withInterceptors([authApiInterceptor, retryInterceptor, errorInterceptor]),
     ),
     { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    provideTransloco({
+      config: {
+        availableLangs: ['es', 'en'],
+        defaultLang: 'es',
+        reRenderOnLangChange: true,
+        prodMode: !isDevMode(),
+      },
+      loader: TranslocoHttpLoader,
+    }),
   ],
 }
