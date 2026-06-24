@@ -4,34 +4,20 @@ import { EMPTY, Observable, pipe } from 'rxjs'
 import { catchError, switchMap, tap } from 'rxjs/operators'
 
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals'
+import { addEntities, setAllEntities } from '@ngrx/signals/entities'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
 
 import { TmdbService } from '@data/api/tmdb.service'
 import { Movie, PagedMovies } from '@data/models/movie.model'
-
-interface MoviesState {
-  movies: Movie[]
-  isLoading: boolean
-  currentPage: number
-  totalPages: number
-  activeGenre: number | null
-  sortBy: string
-}
-
-const initialState: MoviesState = {
-  movies: [],
-  isLoading: false,
-  currentPage: 1,
-  totalPages: 1,
-  activeGenre: null,
-  sortBy: 'popularity.desc',
-}
+import { setError, setLoaded, setLoading } from '@store/connectors/call-state.feature'
+import { withTmdbList } from '@store/connectors/tmdb-list.feature'
 
 export const MoviesStore = signalStore(
   { providedIn: 'root' },
-  withState(initialState),
-  withComputed(({ currentPage, totalPages }) => ({
-    hasMore: computed(() => currentPage() < totalPages()),
+  withTmdbList<Movie>(),
+  withState({ activeGenre: null as number | null, sortBy: 'popularity.desc' }),
+  withComputed(({ entities }) => ({
+    movies: computed(() => entities()),
   })),
   withMethods((store, tmdbService = inject(TmdbService)) => {
     const fetchPage = (page: number): Observable<PagedMovies> => {
@@ -46,14 +32,21 @@ export const MoviesStore = signalStore(
     return {
       loadMovies: rxMethod<void>(
         pipe(
-          tap(() => patchState(store, { isLoading: true, movies: [], currentPage: 1 })),
+          tap(() =>
+            patchState(store, setLoading(), setAllEntities([] as Movie[]), { currentPage: 1 }),
+          ),
           switchMap(() =>
             fetchPage(1).pipe(
               tap(({ movies, totalPages }) =>
-                patchState(store, { movies, totalPages, currentPage: 1, isLoading: false }),
+                patchState(
+                  store,
+                  setAllEntities(movies),
+                  { totalPages, currentPage: 1 },
+                  setLoaded(),
+                ),
               ),
-              catchError(() => {
-                patchState(store, { isLoading: false })
+              catchError((e) => {
+                patchState(store, setError(String(e)))
                 return EMPTY
               }),
             ),
@@ -63,22 +56,13 @@ export const MoviesStore = signalStore(
 
       loadMore: rxMethod<void>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
           switchMap(() => {
             const nextPage = store.currentPage() + 1
             return fetchPage(nextPage).pipe(
               tap(({ movies, totalPages }) =>
-                patchState(store, (state) => ({
-                  movies: [...state.movies, ...movies],
-                  totalPages,
-                  currentPage: nextPage,
-                  isLoading: false,
-                })),
+                patchState(store, addEntities(movies), { totalPages, currentPage: nextPage }),
               ),
-              catchError(() => {
-                patchState(store, { isLoading: false })
-                return EMPTY
-              }),
+              catchError(() => EMPTY),
             )
           }),
         ),

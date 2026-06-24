@@ -8,32 +8,28 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop'
 
 import { TmdbService } from '@data/api/tmdb.service'
 import { MovieDetail } from '@data/models/movie.model'
-
-interface MovieDetailState {
-  movie: MovieDetail | null
-  isLoading: boolean
-  error: string | null
-}
-
-const initialState: MovieDetailState = {
-  movie: null,
-  isLoading: false,
-  error: null,
-}
+import {
+  CallState,
+  setError,
+  setLoaded,
+  setLoading,
+  withCallState,
+} from '@store/connectors/call-state.feature'
 
 export const MovieDetailStore = signalStore(
   { providedIn: 'root' },
-  withState(initialState),
+  withCallState(),
+  withState({ movie: null as MovieDetail | null }),
   withMethods((store, tmdbService = inject(TmdbService)) => ({
     loadMovie: rxMethod<number>(
       pipe(
-        tap(() => patchState(store, { isLoading: true, movie: null, error: null })),
+        tap(() => patchState(store, setLoading(), { movie: null })),
         switchMap((id) =>
           tmdbService.getMovieDetails(id).pipe(
-            tap((movie) => patchState(store, { movie, isLoading: false })),
+            tap((movie) => patchState(store, { movie }, setLoaded())),
             catchError((err: unknown) => {
               const message = err instanceof Error ? err.message : 'Error al cargar la película.'
-              patchState(store, { isLoading: false, error: message })
+              patchState(store, setError(message))
               return EMPTY
             }),
           ),
@@ -42,7 +38,7 @@ export const MovieDetailStore = signalStore(
     ),
 
     clearMovie(): void {
-      patchState(store, initialState)
+      patchState(store, { movie: null, callState: 'init' as CallState })
     },
   })),
 )
