@@ -37,29 +37,56 @@
     </div>
   </a>
 
-  <!-- Favorite button — top-right glassmorphism pill -->
-  <button
-    type="button"
-    class="absolute right-1.5 top-1.5 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110 md:hover:bg-(--color-primary)"
-    [attr.aria-label]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
-    [attr.aria-pressed]="isFavorite()"
-    (click)="onFavoriteClick($event)"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="h-4 w-4 transition-all duration-200"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      [attr.fill]="isFavorite() ? '#e50914' : 'none'"
-      stroke="currentColor"
-      stroke-width="2"
-      [class.text-red-500]="isFavorite()"
+  <!-- Action buttons — top-right stack -->
+  <div class="absolute right-1.5 top-1.5 flex flex-col gap-1">
+    <!-- Favorite -->
+    <button
+      type="button"
+      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110 md:hover:bg-(--color-primary)"
+      [attr.aria-label]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
+      [attr.aria-pressed]="isFavorite()"
+      (click)="onFavoriteClick($event)"
     >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-      />
-    </svg>
-  </button>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-3.5 w-3.5 transition-all duration-200"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        [attr.fill]="isFavorite() ? '#e50914' : 'none'"
+        stroke="currentColor"
+        stroke-width="2"
+        [class.text-red-500]="isFavorite()"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+        />
+      </svg>
+    </button>
+
+    <!-- Watchlist -->
+    <button
+      type="button"
+      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110 md:hover:bg-blue-600"
+      [attr.aria-label]="
+        (isInWatchlist() ? 'movie.removeWatchlist' : 'movie.addWatchlist') | transloco
+      "
+      [attr.aria-pressed]="isInWatchlist()"
+      (click)="onWatchlistClick($event)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-3.5 w-3.5 transition-all duration-200"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        [attr.fill]="isInWatchlist() ? '#3b82f6' : 'none'"
+        stroke="currentColor"
+        stroke-width="2"
+        [class.text-blue-400]="isInWatchlist()"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+    </button>
+  </div>
 </article>

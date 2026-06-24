@@ -10,8 +10,9 @@
       role="list"
     >
       @for (actor of cast(); track actor.id) {
-        <div
-          class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5"
+        <a
+          [routerLink]="['/person', actor.id]"
+          class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5 rounded-lg p-1 transition-opacity duration-200 md:hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-(--color-primary)"
           role="listitem"
         >
           <div
@@ -34,7 +35,7 @@
           <span class="line-clamp-1 text-center text-[9px] text-(--color-text-secondary)">
             {{ actor.character }}
           </span>
-        </div>
+        </a>
       }
     </div>
   </section>

@@ -3,6 +3,7 @@
     "home": "Home",
     "search": "Search",
     "favorites": "Favorites",
+    "watchlist": "My List",
     "settings": "Settings",
     "skip": "Skip to main content"
   },
@@ -18,6 +19,8 @@
   "movie": {
     "addFavorite": "Add to favorites",
     "removeFavorite": "Remove from favorites",
+    "addWatchlist": "Add to my list",
+    "removeWatchlist": "Remove from my list",
     "watchTrailer": "Watch trailer",
     "cast": "Cast",
     "genres": "Genres",
@@ -73,6 +76,34 @@
     "closeDialog": "Close",
     "loading": "Loading...",
     "moviesLoaded": "{{ count }} movies loaded"
+  },
+  "trending": {
+    "title": "Trending This Week"
+  },
+  "recommendations": {
+    "title": "You May Also Like"
+  },
+  "watchProviders": {
+    "title": "Where to Watch"
+  },
+  "watchlist": {
+    "title": "My List",
+    "clearAll": "Clear all",
+    "confirmClear": "Clear the entire list?",
+    "empty": "Your list is empty",
+    "emptySubtitle": "Add movies with the + button"
+  },
+  "rating": {
+    "title": "Your rating",
+    "rate": "Rate this movie",
+    "stars": "stars"
+  },
+  "person": {
+    "biography": "Biography",
+    "born": "Born",
+    "birthplace": "Place of birth",
+    "knownFor": "Known for",
+    "filmography": "Filmography"
   },
   "notFound": {
     "title": "Page not found",

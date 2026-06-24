@@ -1,13 +1,13 @@
 import { inject } from '@angular/core'
 
-import { EMPTY, pipe } from 'rxjs'
+import { EMPTY, forkJoin, pipe } from 'rxjs'
 import { catchError, switchMap, tap } from 'rxjs/operators'
 
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
 
 import { TmdbService } from '@data/api/tmdb.service'
-import { MovieDetail } from '@data/models/movie.model'
+import { MovieDetail, WatchProvider } from '@data/models/movie.model'
 import {
   CallState,
   setError,
@@ -19,14 +19,19 @@ import {
 export const MovieDetailStore = signalStore(
   { providedIn: 'root' },
   withCallState(),
-  withState({ movie: null as MovieDetail | null }),
+  withState({ movie: null as MovieDetail | null, watchProviders: null as WatchProvider[] | null }),
   withMethods((store, tmdbService = inject(TmdbService)) => ({
     loadMovie: rxMethod<number>(
       pipe(
-        tap(() => patchState(store, setLoading(), { movie: null })),
+        tap(() => patchState(store, setLoading(), { movie: null, watchProviders: null })),
         switchMap((id) =>
-          tmdbService.getMovieDetails(id).pipe(
-            tap((movie) => patchState(store, { movie }, setLoaded())),
+          forkJoin({
+            movie: tmdbService.getMovieDetails(id),
+            watchProviders: tmdbService.getWatchProviders(id),
+          }).pipe(
+            tap(({ movie, watchProviders }) =>
+              patchState(store, { movie, watchProviders }, setLoaded()),
+            ),
             catchError((err: unknown) => {
               const message = err instanceof Error ? err.message : 'Error al cargar la película.'
               patchState(store, setError(message))
@@ -38,7 +43,7 @@ export const MovieDetailStore = signalStore(
     ),
 
     clearMovie(): void {
-      patchState(store, { movie: null, callState: 'init' as CallState })
+      patchState(store, { movie: null, watchProviders: null, callState: 'init' as CallState })
     },
   })),
 )

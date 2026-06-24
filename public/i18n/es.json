@@ -3,6 +3,7 @@
     "home": "Inicio",
     "search": "Buscar",
     "favorites": "Favoritos",
+    "watchlist": "Mi lista",
     "settings": "Ajustes",
     "skip": "Saltar al contenido principal"
   },
@@ -18,6 +19,8 @@
   "movie": {
     "addFavorite": "Añadir a favoritos",
     "removeFavorite": "Quitar de favoritos",
+    "addWatchlist": "Añadir a mi lista",
+    "removeWatchlist": "Quitar de mi lista",
     "watchTrailer": "Ver trailer",
     "cast": "Reparto",
     "genres": "Géneros",
@@ -73,6 +76,34 @@
     "closeDialog": "Cerrar",
     "loading": "Cargando...",
     "moviesLoaded": "{{ count }} películas cargadas"
+  },
+  "trending": {
+    "title": "Tendencias de la semana"
+  },
+  "recommendations": {
+    "title": "También te puede gustar"
+  },
+  "watchProviders": {
+    "title": "Dónde ver"
+  },
+  "watchlist": {
+    "title": "Mi lista",
+    "clearAll": "Vaciar lista",
+    "confirmClear": "¿Vaciar toda la lista?",
+    "empty": "Tu lista está vacía",
+    "emptySubtitle": "Añade películas con el botón +"
+  },
+  "rating": {
+    "title": "Tu puntuación",
+    "rate": "Puntúa esta película",
+    "stars": "estrellas"
+  },
+  "person": {
+    "biography": "Biografía",
+    "born": "Nacimiento",
+    "birthplace": "Lugar de nacimiento",
+    "knownFor": "Conocido por",
+    "filmography": "Filmografía"
   },
   "notFound": {
     "title": "Página no encontrada",

@@ -14,6 +14,42 @@
     <app-home-filters />
   </div>
 
+  <!-- Trending row -->
+  @if (facade.trending().length > 0 || facade.trendingLoading()) {
+    <section class="mb-2 mt-1">
+      <h2 class="mb-2 px-4 text-sm font-semibold text-(--color-text-secondary) md:px-6">
+        {{ 'trending.title' | transloco }}
+      </h2>
+
+      @if (facade.trendingLoading()) {
+        <div class="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-2 md:px-6">
+          @for (i of skeletonRange; track i) {
+            <div
+              class="skeleton-shimmer h-[180px] w-[120px] shrink-0 rounded-xl md:h-[210px] md:w-[140px]"
+            ></div>
+          }
+        </div>
+      } @else {
+        <div
+          class="scrollbar-hide flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:px-6"
+          role="list"
+        >
+          @for (movie of facade.trending(); track movie.id) {
+            <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
+              <app-movie-card
+                [movie]="movie"
+                [isFavorite]="facade.isFavorite(movie.id)"
+                [isInWatchlist]="facade.isInWatchlist(movie.id)"
+                (favoriteToggled)="facade.toggleFavorite($event)"
+                (watchlistToggled)="facade.toggleWatchlist($event)"
+              />
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+
   <main class="px-4 pb-28 md:px-6 md:pb-10">
     <!-- Movie grid -->
     <div class="grid grid-cols-2 gap-2.5 md:grid-cols-4 lg:grid-cols-5 md:gap-4">
@@ -21,7 +57,9 @@
         <app-movie-card
           [movie]="movie"
           [isFavorite]="facade.isFavorite(movie.id)"
+          [isInWatchlist]="facade.isInWatchlist(movie.id)"
           (favoriteToggled)="facade.toggleFavorite($event)"
+          (watchlistToggled)="facade.toggleWatchlist($event)"
         />
       }
 

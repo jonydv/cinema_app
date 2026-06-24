@@ -3,15 +3,29 @@ import { inject, Injectable } from '@angular/core'
 
 import { forkJoin, map, Observable } from 'rxjs'
 
-import { adaptMovie, adaptMovieDetail } from '@data/api/adapters/movie.adapter'
+import {
+  adaptMovie,
+  adaptMovieDetail,
+  adaptPerson,
+  adaptWatchProviders,
+} from '@data/api/adapters/movie.adapter'
 import {
   TmdbCreditsDto,
   TmdbMovieDetailDto,
   TmdbMovieDto,
   TmdbPagedResponseDto,
+  TmdbPersonCreditsDto,
+  TmdbPersonDto,
   TmdbVideosDto,
+  TmdbWatchProvidersResponseDto,
 } from '@data/api/dtos/tmdb-movie.dto'
-import { Actor, MovieDetail, PagedMovies } from '@data/models/movie.model'
+import {
+  Actor,
+  MovieDetail,
+  PagedMovies,
+  PersonDetail,
+  WatchProvider,
+} from '@data/models/movie.model'
 
 import { environment } from '@env/environment'
 
@@ -80,6 +94,47 @@ export class TmdbService {
           totalResults: res.total_results,
         })),
       )
+  }
+
+  getTrending(page = 1): Observable<PagedMovies> {
+    return this.http
+      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/trending/movie/week`, {
+        params: { page: String(page) },
+      })
+      .pipe(
+        map((res) => ({
+          movies: res.results.map(adaptMovie),
+          totalPages: res.total_pages,
+          totalResults: res.total_results,
+        })),
+      )
+  }
+
+  getRecommendations(id: number, page = 1): Observable<PagedMovies> {
+    return this.http
+      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/${id}/recommendations`, {
+        params: { page: String(page) },
+      })
+      .pipe(
+        map((res) => ({
+          movies: res.results.map(adaptMovie),
+          totalPages: res.total_pages,
+          totalResults: res.total_results,
+        })),
+      )
+  }
+
+  getWatchProviders(id: number, countryCode = 'US'): Observable<WatchProvider[]> {
+    return this.http
+      .get<TmdbWatchProvidersResponseDto>(`${this.base}/movie/${id}/watch/providers`)
+      .pipe(map((res) => adaptWatchProviders(res, countryCode)))
+  }
+
+  getPersonDetails(id: number): Observable<PersonDetail> {
+    return forkJoin({
+      person: this.http.get<TmdbPersonDto>(`${this.base}/person/${id}`),
+      credits: this.http.get<TmdbPersonCreditsDto>(`${this.base}/person/${id}/movie_credits`),
+    }).pipe(map(({ person, credits }) => adaptPerson(person, credits.cast)))
   }
 
   getMovieCredits(id: number): Observable<Actor[]> {

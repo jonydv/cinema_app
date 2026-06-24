@@ -5,6 +5,7 @@ import { TranslocoModule } from '@ngneat/transloco'
 import { SeoMetadataService } from '@core/seo/seo-metadata.service'
 
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component'
+import { MovieCardComponent } from '@shared/ui/movie-card/movie-card.component'
 import { YoutubePlayerComponent } from '@shared/ui/youtube-player/youtube-player.component'
 
 import { DetailsBackdropComponent } from './components/details-backdrop.component'
@@ -20,6 +21,7 @@ import { DetailsFacade } from './details.facade'
     DetailsCastComponent,
     YoutubePlayerComponent,
     EmptyStateComponent,
+    MovieCardComponent,
   ],
   templateUrl: './details.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

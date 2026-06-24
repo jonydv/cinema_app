@@ -7,6 +7,10 @@ export const serverRoutes: ServerRoute[] = [
   { path: 'favorites', renderMode: RenderMode.Prerender },
   { path: '**', renderMode: RenderMode.Prerender },
 
-  // Dynamic route — server-rendered on demand (id is only known at request time)
+  // Dynamic routes — server-rendered on demand (id only known at request time)
   { path: 'movie/:id', renderMode: RenderMode.Server },
+  { path: 'person/:id', renderMode: RenderMode.Server },
+
+  // Static pages added in Sprint 2
+  { path: 'watchlist', renderMode: RenderMode.Prerender },
 ]

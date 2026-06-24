@@ -33,3 +33,20 @@ export interface PagedMovies {
   totalPages: number
   totalResults: number
 }
+
+export interface WatchProvider {
+  id: number
+  name: string
+  logoUrl: string
+}
+
+export interface PersonDetail {
+  id: number
+  name: string
+  biography: string
+  birthday: string | null
+  birthplace: string | null
+  profileUrl: string
+  knownFor: string
+  credits: Movie[]
+}

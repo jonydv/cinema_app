@@ -2,9 +2,12 @@ import {
   TmdbCastMemberDto,
   TmdbMovieDetailDto,
   TmdbMovieDto,
+  TmdbPersonDto,
+  TmdbPersonMovieCreditDto,
   TmdbVideoDto,
+  TmdbWatchProvidersResponseDto,
 } from '@data/api/dtos/tmdb-movie.dto'
-import { Actor, Movie, MovieDetail } from '@data/models/movie.model'
+import { Actor, Movie, MovieDetail, PersonDetail, WatchProvider } from '@data/models/movie.model'
 
 const BASE_IMG = 'https://image.tmdb.org/t/p'
 const FALLBACK_POSTER = '/assets/images/no-poster.svg'
@@ -60,3 +63,37 @@ function resolveTrailerKey(videos: TmdbVideoDto[]): string | null {
   const trailer = videos.find((v) => v.site === 'YouTube' && v.type === 'Trailer' && v.official)
   return trailer?.key ?? videos.find((v) => v.site === 'YouTube')?.key ?? null
 }
+
+export const adaptWatchProviders = (
+  dto: TmdbWatchProvidersResponseDto,
+  countryCode = 'US',
+): WatchProvider[] => {
+  const country = dto.results[countryCode] ?? dto.results['US']
+  if (!country) return []
+  const all = [...(country.flatrate ?? []), ...(country.rent ?? []), ...(country.buy ?? [])]
+  return Array.from(new Map(all.map((p) => [p.provider_id, p])).values()).map((p) => ({
+    id: p.provider_id,
+    name: p.provider_name,
+    logoUrl: `${BASE_IMG}/w45${p.logo_path}`,
+  }))
+}
+
+export const adaptPerson = (
+  dto: TmdbPersonDto,
+  credits: TmdbPersonMovieCreditDto[],
+): PersonDetail => ({
+  id: dto.id,
+  name: dto.name,
+  biography: dto.biography,
+  birthday: dto.birthday,
+  birthplace: dto.place_of_birth,
+  profileUrl: dto.profile_path
+    ? `${BASE_IMG}/w342${dto.profile_path}`
+    : '/assets/images/no-profile.svg',
+  knownFor: dto.known_for_department,
+  credits: credits
+    .filter((c) => c.poster_path)
+    .sort((a, b) => b.popularity - a.popularity)
+    .slice(0, 20)
+    .map((c) => adaptMovie(c)),
+})

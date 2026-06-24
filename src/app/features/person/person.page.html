@@ -1,0 +1,92 @@
+@if (store.person(); as person) {
+  <div class="px-4 pb-24 pt-4 md:px-6 md:pb-10 md:pt-6">
+    <!-- Profile header -->
+    <div class="mb-6 flex gap-4 md:gap-6">
+      <img
+        [src]="person.profileUrl"
+        [alt]="'a11y.profileAlt' | transloco: { name: person.name }"
+        width="120"
+        height="180"
+        class="h-[150px] w-[100px] shrink-0 rounded-xl object-cover shadow-md ring-1 ring-black/10 md:h-[210px] md:w-[140px]"
+        loading="eager"
+      />
+
+      <div class="flex flex-col gap-2 pt-1">
+        <h1 class="text-xl font-bold text-(--color-text-primary) md:text-2xl" tabindex="-1">
+          {{ person.name }}
+        </h1>
+
+        <p class="text-sm text-(--color-text-secondary)">
+          {{ 'person.knownFor' | transloco }}:
+          <span class="font-medium text-(--color-text-primary)">{{ person.knownFor }}</span>
+        </p>
+
+        @if (person.birthday) {
+          <p class="text-sm text-(--color-text-secondary)">
+            {{ 'person.born' | transloco }}:
+            <span class="font-medium text-(--color-text-primary)">{{ person.birthday }}</span>
+          </p>
+        }
+
+        @if (person.birthplace) {
+          <p class="text-sm text-(--color-text-secondary)">
+            {{ 'person.birthplace' | transloco }}:
+            <span class="font-medium text-(--color-text-primary)">{{ person.birthplace }}</span>
+          </p>
+        }
+      </div>
+    </div>
+
+    <!-- Biography -->
+    @if (person.biography) {
+      <section class="mb-6">
+        <h2 class="mb-2 text-base font-semibold text-(--color-text-primary)">
+          {{ 'person.biography' | transloco }}
+        </h2>
+        <p class="text-sm leading-relaxed text-(--color-text-secondary)">
+          {{ person.biography }}
+        </p>
+      </section>
+    }
+
+    <!-- Filmography -->
+    @if (person.credits.length > 0) {
+      <section>
+        <h2 class="mb-3 text-base font-semibold text-(--color-text-primary)">
+          {{ 'person.filmography' | transloco }}
+        </h2>
+        <div class="grid grid-cols-2 gap-2.5 md:grid-cols-4 lg:grid-cols-5 md:gap-4">
+          @for (movie of person.credits; track movie.id) {
+            <app-movie-card
+              [movie]="movie"
+              [isFavorite]="isFavorite(movie.id)"
+              [isInWatchlist]="isInWatchlist(movie.id)"
+              (favoriteToggled)="toggleFavorite($event)"
+              (watchlistToggled)="toggleWatchlist($event)"
+            />
+          }
+        </div>
+      </section>
+    }
+  </div>
+} @else if (store.isLoading()) {
+  <div class="space-y-4 p-4 md:p-6">
+    <div class="flex gap-4">
+      <div class="skeleton-shimmer h-[150px] w-[100px] shrink-0 rounded-xl"></div>
+      <div class="flex flex-col gap-3 pt-1">
+        <div class="skeleton-shimmer h-6 w-40 rounded-lg"></div>
+        <div class="skeleton-shimmer h-4 w-28 rounded-lg"></div>
+        <div class="skeleton-shimmer h-4 w-32 rounded-lg"></div>
+      </div>
+    </div>
+    <div class="skeleton-shimmer h-4 w-full rounded-lg"></div>
+    <div class="skeleton-shimmer h-4 w-full rounded-lg"></div>
+    <div class="skeleton-shimmer h-4 w-3/4 rounded-lg"></div>
+  </div>
+} @else {
+  <app-empty-state
+    icon="⚠️"
+    [title]="'errors.notFound' | transloco"
+    [subtitle]="'errors.serverError' | transloco"
+  />
+}

@@ -36,6 +36,7 @@ export class AppShellComponent implements OnInit {
     { path: '/', label: 'nav.home', icon: '🏠', exact: true },
     { path: '/search', label: 'nav.search', icon: '🔍', exact: false },
     { path: '/favorites', label: 'nav.favorites', icon: '♥', exact: false },
+    { path: '/watchlist', label: 'nav.watchlist', icon: '📋', exact: false },
   ] as const
 
   protected readonly canInstall = signal(false)
