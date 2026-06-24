@@ -71,7 +71,8 @@
     "backdropAlt": "Imagen de fondo de {{ title }}",
     "profileAlt": "Foto de {{ name }}",
     "closeDialog": "Cerrar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "moviesLoaded": "{{ count }} películas cargadas"
   },
   "notFound": {
     "title": "Página no encontrada",

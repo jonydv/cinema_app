@@ -71,7 +71,8 @@
     "backdropAlt": "Backdrop image for {{ title }}",
     "profileAlt": "Photo of {{ name }}",
     "closeDialog": "Close",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "moviesLoaded": "{{ count }} movies loaded"
   },
   "notFound": {
     "title": "Page not found",

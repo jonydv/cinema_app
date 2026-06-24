@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core'
+import { LiveAnnouncer } from '@angular/cdk/a11y'
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit } from '@angular/core'
 
-import { TranslocoModule } from '@ngneat/transloco'
+import { TranslocoService, TranslocoModule } from '@ngneat/transloco'
 
 import { SeoMetadataService } from '@core/seo/seo-metadata.service'
 
@@ -29,8 +30,20 @@ import { HomeFacade } from './home.facade'
 export class HomePage implements OnInit {
   protected readonly facade = inject(HomeFacade)
   private readonly seo = inject(SeoMetadataService)
+  private readonly liveAnnouncer = inject(LiveAnnouncer)
+  private readonly transloco = inject(TranslocoService)
 
   protected readonly skeletonRange = Array.from({ length: 8 }, (_, i) => i)
+
+  constructor() {
+    effect(() => {
+      const count = this.facade.movies().length
+      if (count > 0 && !this.facade.isLoading()) {
+        const msg = this.transloco.translate('a11y.moviesLoaded', { count })
+        void this.liveAnnouncer.announce(msg, 'polite')
+      }
+    })
+  }
 
   ngOnInit(): void {
     this.seo.setPageTitle('Películas populares')
