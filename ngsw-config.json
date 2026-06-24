@@ -1,0 +1,45 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": ["/favicon.ico", "/index.html", "/*.css", "/*.js", "/manifest.webmanifest"]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": ["/assets/**", "/i18n/**"]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "tmdb-popular",
+      "urls": ["https://api.themoviedb.org/3/movie/popular**"],
+      "cacheConfig": {
+        "maxSize": 5,
+        "maxAge": "1h",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "tmdb-api",
+      "urls": [
+        "https://api.themoviedb.org/3/movie/*",
+        "https://api.themoviedb.org/3/discover/movie**",
+        "https://api.themoviedb.org/3/search/movie**"
+      ],
+      "cacheConfig": {
+        "maxSize": 30,
+        "maxAge": "2h",
+        "strategy": "performance"
+      }
+    }
+  ]
+}

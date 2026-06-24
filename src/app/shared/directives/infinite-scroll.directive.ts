@@ -1,4 +1,14 @@
-import { Directive, ElementRef, inject, input, OnDestroy, OnInit, output } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import {
+  Directive,
+  ElementRef,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  PLATFORM_ID,
+} from '@angular/core'
 
 @Directive({
   selector: '[appInfiniteScroll]',
@@ -12,8 +22,10 @@ export class InfiniteScrollDirective implements OnInit, OnDestroy {
 
   private observer: IntersectionObserver | null = null
   private readonly el = inject(ElementRef<HTMLElement>)
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
 
   ngOnInit(): void {
+    if (!this.isBrowser) return
     this.observer = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {

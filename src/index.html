@@ -1,13 +1,24 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>MovieAppV2</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>MovieApp</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#e50914" />
+    <meta name="description" content="Descubre y guarda tus películas favoritas" />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- Preconnect to TMDB for faster API + image loads -->
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="preconnect" href="https://image.tmdb.org" crossorigin />
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
 </html>

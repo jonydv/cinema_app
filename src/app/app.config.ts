@@ -7,6 +7,7 @@ import {
 } from '@angular/core'
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser'
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router'
+import { provideServiceWorker } from '@angular/service-worker'
 
 import { provideTransloco } from '@ngneat/transloco'
 
@@ -36,6 +37,10 @@ export const appConfig: ApplicationConfig = {
         prodMode: !isDevMode(),
       },
       loader: TranslocoHttpLoader,
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
 }

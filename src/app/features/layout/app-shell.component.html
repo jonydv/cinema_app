@@ -96,3 +96,35 @@
 
 <!-- Toast outlet — rendered once here, visible everywhere -->
 <app-toast />
+
+<!-- PWA install banner (Chrome/Edge only — appears when beforeinstallprompt fires) -->
+@if (canInstall()) {
+  <div
+    class="fixed bottom-20 left-4 right-4 z-50 flex items-center gap-3 rounded-xl bg-(--color-surface) p-4 shadow-lg md:bottom-6 md:left-auto md:right-6 md:max-w-sm"
+    role="region"
+    aria-label="Instalar app"
+  >
+    <span class="text-2xl" aria-hidden="true">📱</span>
+    <div class="flex-1">
+      <p class="text-sm font-semibold text-(--color-text-primary)">Instalar MovieApp</p>
+      <p class="text-xs text-(--color-text-secondary)">
+        Accede más rápido desde tu pantalla de inicio
+      </p>
+    </div>
+    <button
+      type="button"
+      class="rounded-lg bg-(--color-primary) px-3 py-1.5 text-sm font-semibold text-white transition-opacity md:hover:opacity-90"
+      (click)="promptInstall()"
+    >
+      Instalar
+    </button>
+    <button
+      type="button"
+      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full text-(--color-text-secondary)"
+      aria-label="Cerrar"
+      (click)="dismissInstall()"
+    >
+      ✕
+    </button>
+  </div>
+}
