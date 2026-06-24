@@ -6,14 +6,14 @@
   />
 
   <!-- Overview -->
-  <section class="px-4 py-3 md:px-6">
-    <p class="leading-relaxed text-[var(--color-text-secondary)]">{{ movie.overview }}</p>
+  <section class="px-4 py-4 md:px-6">
+    <p class="leading-relaxed text-(--color-text-secondary) md:text-base">{{ movie.overview }}</p>
   </section>
 
   <!-- Trailer -->
   @if (movie.trailerKey) {
-    <section class="px-4 py-3 md:px-6">
-      <h2 class="mb-3 text-lg font-semibold text-[var(--color-text-primary)]">
+    <section class="px-4 pb-2 md:px-6">
+      <h2 class="mb-3 text-base font-semibold text-(--color-text-primary)">
         {{ 'movie.watchTrailer' | transloco }}
       </h2>
       <app-youtube-player [videoKey]="movie.trailerKey" />
@@ -25,15 +25,15 @@
     <app-details-cast [cast]="movie.cast" />
   </div>
 } @else if (facade.isLoading()) {
-  <!-- Skeleton: backdrop placeholder + text lines -->
-  <div class="animate-pulse">
-    <div class="aspect-[16/9] w-full bg-[var(--color-skeleton)] md:aspect-[21/9]"></div>
+  <!-- Skeleton -->
+  <div>
+    <div class="skeleton-shimmer aspect-video w-full md:aspect-21/9"></div>
     <div class="space-y-3 p-4 md:p-6">
-      <div class="h-8 w-3/4 rounded bg-[var(--color-skeleton)]"></div>
-      <div class="h-4 w-1/2 rounded bg-[var(--color-skeleton)]"></div>
-      <div class="h-4 w-full rounded bg-[var(--color-skeleton)]"></div>
-      <div class="h-4 w-full rounded bg-[var(--color-skeleton)]"></div>
-      <div class="h-4 w-2/3 rounded bg-[var(--color-skeleton)]"></div>
+      <div class="skeleton-shimmer h-8 w-3/4 rounded-lg"></div>
+      <div class="skeleton-shimmer h-4 w-1/2 rounded-lg"></div>
+      <div class="skeleton-shimmer h-4 w-full rounded-lg"></div>
+      <div class="skeleton-shimmer h-4 w-full rounded-lg"></div>
+      <div class="skeleton-shimmer h-4 w-2/3 rounded-lg"></div>
     </div>
   </div>
 } @else {

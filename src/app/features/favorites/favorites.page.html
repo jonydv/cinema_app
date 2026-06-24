@@ -1,10 +1,10 @@
 <div class="px-4 pb-24 pt-4 md:px-6 md:pb-8 md:pt-6">
   <!-- Header: title + clear all -->
   <header class="mb-4 flex min-h-[48px] flex-wrap items-center justify-between gap-3">
-    <h1 class="text-2xl font-bold text-[var(--color-text-primary)]" tabindex="-1">
+    <h1 class="text-2xl font-bold text-(--color-text-primary)" tabindex="-1">
       {{ 'favorites.title' | transloco }}
       @if (facade.count() > 0) {
-        <span class="ml-2 text-base font-normal text-[var(--color-text-secondary)]">
+        <span class="ml-2 text-base font-normal text-(--color-text-secondary)">
           ({{ facade.count() }})
         </span>
       }
@@ -21,7 +21,7 @@
         </button>
       } @else {
         <div class="flex items-center gap-2">
-          <span class="text-sm text-[var(--color-text-secondary)]">
+          <span class="text-sm text-(--color-text-secondary)">
             {{ 'favorites.confirmClear' | transloco }}
           </span>
           <button
@@ -33,7 +33,7 @@
           </button>
           <button
             type="button"
-            class="rounded-lg border border-[var(--color-border)] px-3 py-1.5 text-sm font-medium text-[var(--color-text-primary)] min-h-[44px] transition-colors md:hover:bg-[var(--color-surface)]"
+            class="rounded-lg border border-(--color-border) px-3 py-1.5 text-sm font-medium text-(--color-text-primary) min-h-[44px] transition-colors md:hover:bg-(--color-surface)"
             (click)="cancelClear()"
           >
             No

@@ -72,17 +72,17 @@ export class HomeFiltersComponent {
 
   genreChipClass(id: number | null): string {
     const base = 'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors'
-    const active = 'bg-[var(--color-primary)] text-white border-[var(--color-primary)]'
+    const active = 'bg-(--color-primary) text-white border-(--color-primary)'
     const inactive =
-      'border-[var(--color-border)] text-[var(--color-text-secondary)] md:hover:border-[var(--color-primary)]'
+      'border-(--color-border) text-(--color-text-secondary) md:hover:border-(--color-primary)'
     return `${base} ${this.facade.activeGenre() === id ? active : inactive}`
   }
 
   sortRowClass(value: string): string {
     const base =
       'flex items-center justify-between rounded-lg p-3 text-left transition-colors min-h-[48px] w-full'
-    const active = 'text-[var(--color-primary)] font-semibold'
-    const inactive = 'text-[var(--color-text-primary)]'
+    const active = 'text-(--color-primary) font-semibold'
+    const inactive = 'text-(--color-text-primary)'
     return `${base} ${this.facade.sortBy() === value ? active : inactive}`
   }
 }

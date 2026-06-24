@@ -1,35 +1,37 @@
 @if (cast().length > 0) {
-  <section class="py-3">
-    <h2 class="mb-3 px-4 text-lg font-semibold text-[var(--color-text-primary)] md:px-6">
+  <section class="py-4">
+    <h2 class="mb-3 text-base font-semibold text-(--color-text-primary)">
       {{ 'movie.cast' | transloco }}
     </h2>
 
-    <!-- Horizontal scroll — negative margin to bleed past padding -->
+    <!-- Horizontal scroll with snap -->
     <div
-      class="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 md:-mx-6 md:px-6"
+      class="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 md:-mx-6 md:px-6"
       role="list"
     >
       @for (actor of cast(); track actor.id) {
         <div
-          class="flex w-[80px] shrink-0 snap-center flex-col items-center gap-1.5"
+          class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5"
           role="listitem"
         >
-          <div class="relative size-[64px] overflow-hidden rounded-full bg-[var(--color-skeleton)]">
+          <div
+            class="relative size-[60px] overflow-hidden rounded-full bg-(--color-skeleton) ring-2 ring-black/5 dark:ring-white/5"
+          >
             <img
               [src]="actor.profileUrl"
               [alt]="'a11y.profileAlt' | transloco: { name: actor.name }"
-              width="64"
-              height="64"
+              width="60"
+              height="60"
               class="h-full w-full object-cover"
               loading="lazy"
             />
           </div>
           <span
-            class="line-clamp-2 text-center text-xs font-medium leading-tight text-[var(--color-text-primary)]"
+            class="line-clamp-2 text-center text-[10px] font-medium leading-tight text-(--color-text-primary)"
           >
             {{ actor.name }}
           </span>
-          <span class="line-clamp-1 text-center text-[10px] text-[var(--color-text-secondary)]">
+          <span class="line-clamp-1 text-center text-[9px] text-(--color-text-secondary)">
             {{ actor.character }}
           </span>
         </div>

@@ -1,4 +1,3 @@
-import { NgOptimizedImage } from '@angular/common'
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core'
 import { RouterLink } from '@angular/router'
 
@@ -9,7 +8,7 @@ import { Movie } from '@data/models/movie.model'
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [NgOptimizedImage, RouterLink, TranslocoModule],
+  imports: [RouterLink, TranslocoModule],
   templateUrl: './movie-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

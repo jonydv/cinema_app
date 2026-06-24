@@ -1,7 +1,7 @@
 <!-- FAB: visible only on mobile, fixed above bottom tab bar -->
 <button
   type="button"
-  class="fixed bottom-[76px] right-4 z-10 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-lg transition-transform active:scale-95 md:hidden"
+  class="fixed bottom-[76px] right-4 z-10 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-(--color-primary) text-white shadow-lg transition-transform active:scale-95 md:hidden"
   (click)="open()"
   [attr.aria-label]="'filters.title' | transloco"
 >
@@ -33,7 +33,7 @@
   </div>
 
   <select
-    class="ml-auto rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1.5 text-sm text-[var(--color-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+    class="ml-auto rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
     [value]="facade.sortBy()"
     (change)="onSortChange($event)"
     [attr.aria-label]="'filters.sortBy' | transloco"
@@ -48,7 +48,7 @@
 <app-bottom-sheet [isOpen]="isOpen()" [label]="'filters.title' | transloco" (closed)="close()">
   <div class="flex flex-col gap-6 pb-2">
     <section>
-      <h3 class="mb-3 font-semibold text-[var(--color-text-primary)]">
+      <h3 class="mb-3 font-semibold text-(--color-text-primary)">
         {{ 'filters.genre' | transloco }}
       </h3>
       <div class="flex flex-wrap gap-2">
@@ -61,7 +61,7 @@
     </section>
 
     <section>
-      <h3 class="mb-3 font-semibold text-[var(--color-text-primary)]">
+      <h3 class="mb-3 font-semibold text-(--color-text-primary)">
         {{ 'filters.sortBy' | transloco }}
       </h3>
       <div class="flex flex-col">

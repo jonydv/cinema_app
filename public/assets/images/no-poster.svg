@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" width="200" height="300">
+  <rect width="200" height="300" fill="#1c1c1c"/>
+  <!-- Film strip sprockets top -->
+  <rect x="12" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="40" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="68" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="116" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="144" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="172" y="12" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <!-- Film strip sprockets bottom -->
+  <rect x="12" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="40" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="68" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="116" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="144" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <rect x="172" y="272" width="16" height="16" rx="3" fill="#2a2a2a"/>
+  <!-- Center film reel icon -->
+  <circle cx="100" cy="150" r="52" fill="none" stroke="#2d2d2d" stroke-width="2"/>
+  <circle cx="100" cy="150" r="14" fill="#2a2a2a"/>
+  <!-- Reel holes -->
+  <circle cx="100" cy="98" r="8" fill="#2a2a2a"/>
+  <circle cx="145" cy="125" r="8" fill="#2a2a2a"/>
+  <circle cx="145" cy="175" r="8" fill="#2a2a2a"/>
+  <circle cx="100" cy="202" r="8" fill="#2a2a2a"/>
+  <circle cx="55" cy="175" r="8" fill="#2a2a2a"/>
+  <circle cx="55" cy="125" r="8" fill="#2a2a2a"/>
+  <text x="100" y="238" text-anchor="middle" fill="#3d3d3d" font-size="11" font-family="system-ui,sans-serif" letter-spacing="0.5">SIN IMAGEN</text>
+</svg>

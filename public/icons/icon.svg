@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#141414"/>
+  <!-- Film clapper top bar -->
+  <rect x="96" y="140" width="320" height="48" rx="8" fill="#e50914"/>
+  <!-- Clapper diagonal stripes -->
+  <clipPath id="clip"><rect x="96" y="140" width="320" height="48" rx="8"/></clipPath>
+  <g clip-path="url(#clip)">
+    <rect x="96" y="140" width="36" height="48" fill="#c5070f"/>
+    <rect x="156" y="140" width="36" height="48" fill="#c5070f"/>
+    <rect x="216" y="140" width="36" height="48" fill="#c5070f"/>
+    <rect x="276" y="140" width="36" height="48" fill="#c5070f"/>
+    <rect x="336" y="140" width="36" height="48" fill="#c5070f"/>
+    <rect x="396" y="140" width="36" height="48" fill="#c5070f"/>
+  </g>
+  <!-- Clapper body -->
+  <rect x="96" y="196" width="320" height="196" rx="8" fill="#1f1f1f"/>
+  <!-- Lens circle -->
+  <circle cx="256" cy="294" r="72" fill="#141414" stroke="#2d2d2d" stroke-width="4"/>
+  <circle cx="256" cy="294" r="48" fill="#0a0a0a"/>
+  <circle cx="256" cy="294" r="18" fill="#e50914"/>
+  <!-- Hinge tabs top -->
+  <rect x="118" y="126" width="32" height="20" rx="4" fill="#2d2d2d"/>
+  <rect x="220" y="126" width="32" height="20" rx="4" fill="#2d2d2d"/>
+  <rect x="322" y="126" width="32" height="20" rx="4" fill="#2d2d2d"/>
+</svg>

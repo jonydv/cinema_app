@@ -8,9 +8,9 @@
 
   <!-- Result count -->
   @if (facade.query() && !facade.isLoading() && facade.results().length > 0) {
-    <p class="mb-3 text-sm text-[var(--color-text-secondary)]">
+    <p class="mb-3 text-sm text-(--color-text-secondary)">
       {{ 'search.resultsFor' | transloco }}
-      <span class="font-semibold text-[var(--color-text-primary)]">"{{ facade.query() }}"</span>
+      <span class="font-semibold text-(--color-text-primary)">"{{ facade.query() }}"</span>
     </p>
   }
 
@@ -43,7 +43,7 @@
   <!-- Idle: no query yet -->
   @if (!facade.query() && !facade.isLoading()) {
     <div
-      class="flex flex-col items-center justify-center gap-3 py-16 text-[var(--color-text-secondary)]"
+      class="flex flex-col items-center justify-center gap-3 py-16 text-(--color-text-secondary)"
     >
       <svg
         class="h-16 w-16 opacity-30"
