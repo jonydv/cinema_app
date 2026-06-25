@@ -4,12 +4,17 @@
     "search": "Buscar",
     "favorites": "Favoritos",
     "watchlist": "Mi lista",
+    "history": "Historial",
     "settings": "Ajustes",
     "skip": "Saltar al contenido principal"
   },
   "home": {
     "title": "Películas populares",
-    "loadMore": "Cargar más"
+    "loadMore": "Cargar más",
+    "nowPlaying": "En cartelera",
+    "topRated": "Mejor valoradas",
+    "upcoming": "Próximos estrenos",
+    "popular": "Populares"
   },
   "search": {
     "placeholder": "Buscar películas...",
@@ -22,12 +27,16 @@
     "addWatchlist": "Añadir a mi lista",
     "removeWatchlist": "Quitar de mi lista",
     "watchTrailer": "Ver trailer",
+    "watchOnYouTube": "Ver en YouTube",
     "cast": "Reparto",
     "genres": "Géneros",
     "runtime": "Duración",
     "minutes": "min",
     "rating": "Puntuación",
-    "releaseYear": "Año"
+    "releaseYear": "Año",
+    "markWatched": "Marcar como visto",
+    "markUnwatched": "Quitar de vistos",
+    "watched": "Visto"
   },
   "favorites": {
     "title": "Mis favoritos",
@@ -42,7 +51,15 @@
     "rating": "Puntuación",
     "releaseDate": "Fecha de estreno",
     "apply": "Aplicar",
-    "reset": "Resetear"
+    "reset": "Resetear",
+    "year": "Año",
+    "minRating": "Rating mínimo",
+    "duration": "Duración",
+    "durationAny": "Cualquiera",
+    "durationShort": "< 90 min",
+    "durationMedium": "90–150 min",
+    "durationLong": "> 150 min",
+    "clearFilters": "Limpiar filtros"
   },
   "empty": {
     "favorites": "Aún no tienes favoritos",
@@ -109,5 +126,14 @@
     "title": "Página no encontrada",
     "subtitle": "El contenido que buscas no existe o fue movido.",
     "goHome": "Volver al inicio"
+  },
+  "history": {
+    "title": "Historial",
+    "empty": "Todavía no marcaste ninguna película como vista",
+    "emptySubtitle": "Marcá películas con 👁 para registrar que las viste",
+    "watchedOn": "Visto el {{date}}",
+    "removeFromHistory": "Quitar del historial",
+    "clearAll": "Limpiar todo",
+    "moviesCount": "películas vistas"
   }
 }

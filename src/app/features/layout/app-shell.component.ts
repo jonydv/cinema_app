@@ -7,11 +7,12 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core'
+import { toSignal } from '@angular/core/rxjs-interop'
 import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
 
 import { filter } from 'rxjs/operators'
 
-import { TranslocoModule } from '@ngneat/transloco'
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco'
 
 import { ThemeService } from '@core/theme/theme.service'
 
@@ -31,24 +32,37 @@ export class AppShellComponent implements OnInit {
   readonly favoritesStore = inject(FavoritesStore)
   private readonly router = inject(Router)
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
+  private readonly transloco = inject(TranslocoService)
+
+  readonly activeLang = toSignal(this.transloco.langChanges$, {
+    initialValue: this.transloco.getActiveLang(),
+  })
+  protected readonly settingsOpen = signal(false)
 
   readonly navItems = [
     { path: '/', label: 'nav.home', icon: '🏠', exact: true },
     { path: '/search', label: 'nav.search', icon: '🔍', exact: false },
     { path: '/favorites', label: 'nav.favorites', icon: '♥', exact: false },
     { path: '/watchlist', label: 'nav.watchlist', icon: '📋', exact: false },
+    { path: '/history', label: 'nav.history', icon: '📺', exact: false },
   ] as const
 
   protected readonly canInstall = signal(false)
   private deferredInstallPrompt: BeforeInstallPromptEvent | null = null
 
   ngOnInit(): void {
-    // Move focus to main heading after each navigation for a11y
+    // Move focus to main heading after each navigation for a11y.
+    // Only triggers on path changes — not on query-param-only updates (e.g. search input),
+    // which also fire NavigationEnd but must not steal focus from the active input.
+    let previousPath: string | undefined = ''
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe(() => {
-        const heading = document.querySelector<HTMLElement>('#main-content h1')
-        heading?.focus()
+      .subscribe((e) => {
+        const path = e.urlAfterRedirects.split('?')[0]
+        if (path !== previousPath) {
+          previousPath = path
+          document.querySelector<HTMLElement>('#main-content h1')?.focus()
+        }
       })
 
     // Capture PWA install prompt (Chrome/Edge only — iOS uses Safari share menu)
@@ -77,5 +91,9 @@ export class AppShellComponent implements OnInit {
 
   protected dismissInstall(): void {
     this.canInstall.set(false)
+  }
+
+  toggleLang(): void {
+    this.transloco.setActiveLang(this.transloco.getActiveLang() === 'es' ? 'en' : 'es')
   }
 }

@@ -34,6 +34,10 @@ export const routes: Routes = [
         loadComponent: () => import('@features/person/person.page').then((m) => m.PersonPage),
       },
       {
+        path: 'history',
+        loadComponent: () => import('@features/history/history.page').then((m) => m.HistoryPage),
+      },
+      {
         path: '**',
         loadComponent: () =>
           import('@features/not-found/not-found.page').then((m) => m.NotFoundPage),

@@ -4,12 +4,17 @@
     "search": "Search",
     "favorites": "Favorites",
     "watchlist": "My List",
+    "history": "History",
     "settings": "Settings",
     "skip": "Skip to main content"
   },
   "home": {
     "title": "Popular Movies",
-    "loadMore": "Load more"
+    "loadMore": "Load more",
+    "nowPlaying": "Now Playing",
+    "topRated": "Top Rated",
+    "upcoming": "Upcoming",
+    "popular": "Popular"
   },
   "search": {
     "placeholder": "Search movies...",
@@ -22,12 +27,16 @@
     "addWatchlist": "Add to my list",
     "removeWatchlist": "Remove from my list",
     "watchTrailer": "Watch trailer",
+    "watchOnYouTube": "Watch on YouTube",
     "cast": "Cast",
     "genres": "Genres",
     "runtime": "Runtime",
     "minutes": "min",
     "rating": "Rating",
-    "releaseYear": "Year"
+    "releaseYear": "Year",
+    "markWatched": "Mark as watched",
+    "markUnwatched": "Remove from watched",
+    "watched": "Watched"
   },
   "favorites": {
     "title": "My Favorites",
@@ -42,7 +51,15 @@
     "rating": "Rating",
     "releaseDate": "Release date",
     "apply": "Apply",
-    "reset": "Reset"
+    "reset": "Reset",
+    "year": "Year",
+    "minRating": "Min rating",
+    "duration": "Duration",
+    "durationAny": "Any",
+    "durationShort": "< 90 min",
+    "durationMedium": "90–150 min",
+    "durationLong": "> 150 min",
+    "clearFilters": "Clear filters"
   },
   "empty": {
     "favorites": "No favorites yet",
@@ -109,5 +126,14 @@
     "title": "Page not found",
     "subtitle": "The content you are looking for doesn't exist or was moved.",
     "goHome": "Go back home"
+  },
+  "history": {
+    "title": "History",
+    "empty": "You haven't marked any movie as watched yet",
+    "emptySubtitle": "Mark movies with 👁 to track what you've seen",
+    "watchedOn": "Watched on {{date}}",
+    "removeFromHistory": "Remove from history",
+    "clearAll": "Clear all",
+    "moviesCount": "movies watched"
   }
 }
