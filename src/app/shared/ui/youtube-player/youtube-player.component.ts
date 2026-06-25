@@ -1,9 +1,12 @@
+import { isPlatformBrowser } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
+  inject,
   input,
   OnInit,
+  PLATFORM_ID,
 } from '@angular/core'
 
 import { TranslocoModule } from '@ngneat/transloco'
@@ -19,9 +22,10 @@ import { TranslocoModule } from '@ngneat/transloco'
 export class YoutubePlayerComponent implements OnInit {
   readonly videoKey = input<string | null>(null)
 
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
+
   ngOnInit(): void {
-    // Dynamically import the custom element — avoids SSR issues
-    if (typeof window !== 'undefined') {
+    if (this.isBrowser) {
       import('lite-youtube-embed')
     }
   }

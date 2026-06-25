@@ -4,6 +4,25 @@
     class="w-full rounded-lg"
     [attr.playlabel]="'movie.watchTrailer' | transloco"
   ></lite-youtube>
+  <a
+    [href]="'https://www.youtube.com/watch?v=' + videoKey()"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="mt-2 flex items-center justify-center gap-1.5 text-xs text-(--color-text-secondary) transition-colors md:hover:text-(--color-text-primary)"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-3.5 w-3.5"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        d="M21.582 6.186A2.657 2.657 0 0 0 19.716 4.3C18.147 3.875 12 3.875 12 3.875s-6.147 0-7.716.425A2.657 2.657 0 0 0 2.418 6.186C2 7.768 2 11.084 2 11.084s0 3.316.418 4.898A2.657 2.657 0 0 0 4.284 17.87C5.853 18.295 12 18.295 12 18.295s6.147 0 7.716-.425a2.657 2.657 0 0 0 1.866-1.888C22 14.4 22 11.084 22 11.084s0-3.316-.418-4.898zm-11.33 7.903V8.079l5.155 3.005-5.155 3.005z"
+      />
+    </svg>
+    {{ 'movie.watchOnYouTube' | transloco }}
+  </a>
 } @else {
   <div
     class="flex aspect-video w-full items-center justify-center rounded-lg bg-(--color-skeleton) text-(--color-text-secondary)"
