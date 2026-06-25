@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core'
 
-import { Movie } from '@data/models/movie.model'
+import { Movie, MovieDetail } from '@data/models/movie.model'
 import { FavoritesStore } from '@store/favorites.store'
 import { MovieDetailStore } from '@store/movie-detail.store'
 import { RatingsStore } from '@store/ratings.store'
 import { RecommendationsStore } from '@store/recommendations.store'
+import { WatchedStore } from '@store/watched.store'
 import { WatchlistStore } from '@store/watchlist.store'
 
 @Injectable({ providedIn: 'root' })
@@ -14,6 +15,7 @@ export class DetailsFacade {
   private readonly watchlistStore = inject(WatchlistStore)
   private readonly ratingsStore = inject(RatingsStore)
   private readonly recommendationsStore = inject(RecommendationsStore)
+  private readonly watchedStore = inject(WatchedStore)
 
   readonly movie = this.detailStore.movie
   readonly isLoading = this.detailStore.isLoading
@@ -55,5 +57,34 @@ export class DetailsFacade {
 
   setRating(movieId: number, stars: number): void {
     this.ratingsStore.setRating(movieId, stars)
+  }
+
+  isWatched(id: number): boolean {
+    return this.watchedStore.isWatched(id)
+  }
+
+  toggleWatched(movie: MovieDetail): void {
+    if (this.watchedStore.isWatched(movie.id)) {
+      this.watchedStore.markUnwatched(movie.id)
+    } else {
+      this.watchedStore.markWatched({
+        id: movie.id,
+        title: movie.title,
+        posterUrl: movie.posterUrl,
+        rating: movie.rating,
+        overview: movie.overview,
+        backdropUrl: movie.backdropUrl,
+        releaseDate: movie.releaseDate,
+        releaseYear: movie.releaseYear,
+        genreIds: [],
+        voteCount: movie.voteCount,
+        popularity: 0,
+      })
+    }
+  }
+
+  watchedAt(id: number): Date | null {
+    const entry = this.watchedStore.watched()[id]
+    return entry ? new Date(entry.date) : null
   }
 }

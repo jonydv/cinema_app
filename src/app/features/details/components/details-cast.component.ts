@@ -5,10 +5,12 @@ import { TranslocoModule } from '@ngneat/transloco'
 
 import { Actor } from '@data/models/movie.model'
 
+import { CarouselComponent } from '@shared/ui/carousel/carousel.component'
+
 @Component({
   selector: 'app-details-cast',
   standalone: true,
-  imports: [TranslocoModule, RouterLink],
+  imports: [TranslocoModule, RouterLink, CarouselComponent],
   templateUrl: './details-cast.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -93,6 +93,43 @@
     </button>
   </section>
 
+  <!-- Watched button -->
+  <section class="px-4 pb-4 md:px-6">
+    <button
+      type="button"
+      class="flex min-h-[44px] items-center gap-2 rounded-xl border px-4 py-2 text-sm font-medium transition-colors duration-200"
+      [class]="
+        facade.isWatched(movie.id)
+          ? 'border-emerald-500 bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400'
+          : 'border-(--color-border) bg-(--color-surface) text-(--color-text-primary) md:hover:border-emerald-400'
+      "
+      [attr.aria-pressed]="facade.isWatched(movie.id)"
+      (click)="facade.toggleWatched(movie)"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+        />
+      </svg>
+      @if (facade.isWatched(movie.id) && facade.watchedAt(movie.id); as watchedDate) {
+        {{ 'history.watchedOn' | transloco: { date: (watchedDate | date: 'dd/MM/yyyy') } }}
+      } @else {
+        {{ 'movie.markWatched' | transloco }}
+      }
+    </button>
+  </section>
+
   <!-- Trailer -->
   @if (movie.trailerKey) {
     <section class="px-4 pb-2 md:px-6">
@@ -121,10 +158,7 @@
           }
         </div>
       } @else {
-        <div
-          class="scrollbar-hide flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:px-6"
-          role="list"
-        >
+        <app-carousel role="list">
           @for (rec of facade.recommendations(); track rec.id) {
             <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
               <app-movie-card
@@ -136,7 +170,7 @@
               />
             </div>
           }
-        </div>
+        </app-carousel>
       }
     </section>
   }

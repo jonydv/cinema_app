@@ -4,11 +4,7 @@
       {{ 'movie.cast' | transloco }}
     </h2>
 
-    <!-- Horizontal scroll with snap -->
-    <div
-      class="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 md:-mx-6 md:px-6"
-      role="list"
-    >
+    <app-carousel scrollClass="gap-3 px-4 pb-2 md:px-6" role="list">
       @for (actor of cast(); track actor.id) {
         <a
           [routerLink]="['/person', actor.id]"
@@ -37,6 +33,6 @@
           </span>
         </a>
       }
-    </div>
+    </app-carousel>
   </section>
 }
