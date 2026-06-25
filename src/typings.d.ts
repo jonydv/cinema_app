@@ -1,3 +1,6 @@
+// lite-youtube-embed ships without TypeScript declarations — only used as a side-effect import.
+declare module 'lite-youtube-embed'
+
 // Non-standard browser event for PWA install prompt (Chrome/Edge only).
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<{ outcome: 'accepted' | 'dismissed' }>
