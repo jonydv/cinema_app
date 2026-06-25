@@ -1,11 +1,20 @@
 import { computed, inject } from '@angular/core'
 
 import { EMPTY, Observable, pipe } from 'rxjs'
-import { catchError, switchMap, tap } from 'rxjs/operators'
+import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators'
 
-import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals'
+import {
+  patchState,
+  signalStore,
+  withComputed,
+  withHooks,
+  withMethods,
+  withState,
+} from '@ngrx/signals'
 import { addEntities, setAllEntities } from '@ngrx/signals/entities'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
+
+import { TranslocoService } from '@ngneat/transloco'
 
 import { TmdbService } from '@data/api/tmdb.service'
 import { Movie, PagedMovies } from '@data/models/movie.model'
@@ -15,16 +24,37 @@ import { withTmdbList } from '@store/connectors/tmdb-list.feature'
 export const MoviesStore = signalStore(
   { providedIn: 'root' },
   withTmdbList<Movie>(),
-  withState({ activeGenre: null as number | null, sortBy: 'popularity.desc' }),
+  withState({
+    activeGenre: null as number | null,
+    sortBy: 'popularity.desc',
+    activeYear: null as number | null,
+    minRating: 0,
+    minRuntime: null as number | null,
+    maxRuntime: null as number | null,
+  }),
   withComputed(({ entities }) => ({
     movies: computed(() => entities()),
   })),
   withMethods((store, tmdbService = inject(TmdbService)) => {
+    const isFiltered = (): boolean =>
+      store.activeGenre() !== null ||
+      store.sortBy() !== 'popularity.desc' ||
+      store.activeYear() !== null ||
+      store.minRating() > 0 ||
+      store.minRuntime() !== null ||
+      store.maxRuntime() !== null
+
     const fetchPage = (page: number): Observable<PagedMovies> => {
-      const genre = store.activeGenre()
-      const sort = store.sortBy()
-      if (genre !== null || sort !== 'popularity.desc') {
-        return tmdbService.getDiscoverMovies(page, genre, sort)
+      if (isFiltered()) {
+        return tmdbService.getDiscoverMovies(
+          page,
+          store.activeGenre(),
+          store.sortBy(),
+          store.activeYear(),
+          store.minRating(),
+          store.minRuntime(),
+          store.maxRuntime(),
+        )
       }
       return tmdbService.getPopularMovies(page)
     }
@@ -75,6 +105,25 @@ export const MoviesStore = signalStore(
       setSortBy(sort: string): void {
         patchState(store, { sortBy: sort })
       },
+
+      setYear(year: number | null): void {
+        patchState(store, { activeYear: year })
+      },
+
+      setMinRating(rating: number): void {
+        patchState(store, { minRating: rating })
+      },
+
+      setRuntimeRange(min: number | null, max: number | null): void {
+        patchState(store, { minRuntime: min, maxRuntime: max })
+      },
     }
+  }),
+  withHooks({
+    onInit(store) {
+      inject(TranslocoService)
+        .langChanges$.pipe(distinctUntilChanged())
+        .subscribe(() => store.loadMovies())
+    },
   }),
 )
