@@ -1,0 +1,92 @@
+<div class="px-4 pb-28 pt-5 md:px-6 md:pb-10 md:pt-7">
+  <header class="mb-4 flex items-center justify-between">
+    <h1
+      class="text-2xl font-bold tracking-tight text-(--color-text-primary) md:text-3xl"
+      tabindex="-1"
+    >
+      {{ 'history.title' | transloco }}
+    </h1>
+    @if (!isEmpty()) {
+      <div class="flex items-center gap-3">
+        <span class="text-sm text-(--color-text-secondary)">
+          {{ watchedCount() }} {{ 'history.moviesCount' | transloco }}
+        </span>
+        <button
+          type="button"
+          class="text-sm text-(--color-text-secondary) underline underline-offset-2 md:hover:text-(--color-primary)"
+          (click)="clearAll()"
+        >
+          {{ 'history.clearAll' | transloco }}
+        </button>
+      </div>
+    }
+  </header>
+
+  @if (isEmpty()) {
+    <app-empty-state
+      icon="📺"
+      [title]="'history.empty' | transloco"
+      [subtitle]="'history.emptySubtitle' | transloco"
+    />
+  } @else {
+    <div class="flex flex-col gap-6">
+      @for (group of groupedByMonth(); track group.label) {
+        <section>
+          <h2 class="mb-3 text-xs font-bold uppercase tracking-widest text-(--color-primary)">
+            {{ group.label }}
+          </h2>
+          <ul class="flex flex-col gap-2">
+            @for (entry of group.entries; track entry.id) {
+              <li
+                class="flex items-center gap-3 rounded-xl bg-(--color-surface) p-3 shadow-sm ring-1 ring-black/5 dark:ring-white/5"
+              >
+                <img
+                  [src]="entry.posterUrl"
+                  [alt]="entry.title"
+                  width="32"
+                  height="46"
+                  class="h-[46px] w-8 shrink-0 rounded object-cover"
+                  loading="lazy"
+                />
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-sm font-semibold text-(--color-text-primary)">
+                    {{ entry.title }}
+                  </p>
+                  <p class="text-xs text-(--color-text-secondary)">
+                    {{
+                      'history.watchedOn' | transloco: { date: (entry.date | date: 'dd MMM yyyy') }
+                    }}
+                  </p>
+                  @if (entry.rating > 0) {
+                    <span class="text-xs font-bold text-amber-400">★ {{ entry.rating }}</span>
+                  }
+                </div>
+                <button
+                  type="button"
+                  class="flex min-h-[36px] min-w-[36px] shrink-0 items-center justify-center rounded-lg text-(--color-text-secondary) transition-colors md:hover:text-red-500"
+                  [attr.aria-label]="'history.removeFromHistory' | transloco"
+                  (click)="removeFromHistory(entry.id)"
+                >
+                  <svg
+                    class="size-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    </div>
+  }
+</div>
