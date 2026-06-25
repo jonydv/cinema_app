@@ -1,33 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { NgTemplateOutlet } from '@angular/common'
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core'
 
 import { TranslocoModule } from '@ngneat/transloco'
 
+import { TmdbService } from '@data/api/tmdb.service'
+
 import { BottomSheetComponent } from '@shared/ui/bottom-sheet/bottom-sheet.component'
+import { RangeSliderComponent } from '@shared/ui/range-slider/range-slider.component'
 
 import { HomeFacade } from '../home.facade'
-
-interface Genre {
-  id: number | null
-  label: string
-}
 
 interface SortOption {
   value: string
   labelKey: string
 }
-
-const GENRES: Genre[] = [
-  { id: null, label: 'Todos' },
-  { id: 28, label: 'Acción' },
-  { id: 35, label: 'Comedia' },
-  { id: 18, label: 'Drama' },
-  { id: 27, label: 'Terror' },
-  { id: 878, label: 'Sci-Fi' },
-  { id: 10749, label: 'Romance' },
-  { id: 16, label: 'Animación' },
-  { id: 53, label: 'Thriller' },
-  { id: 12, label: 'Aventura' },
-]
 
 const SORT_OPTIONS: SortOption[] = [
   { value: 'popularity.desc', labelKey: 'filters.popularity' },
@@ -35,18 +21,36 @@ const SORT_OPTIONS: SortOption[] = [
   { value: 'primary_release_date.desc', labelKey: 'filters.releaseDate' },
 ]
 
+const CURRENT_YEAR = new Date().getFullYear()
+const YEARS = Array.from({ length: CURRENT_YEAR - 1970 + 1 }, (_, i) => CURRENT_YEAR - i)
+
+const DURATION_OPTIONS = [
+  { labelKey: 'filters.durationAny', min: null as number | null, max: null as number | null },
+  { labelKey: 'filters.durationShort', min: null as number | null, max: 90 as number | null },
+  { labelKey: 'filters.durationMedium', min: 90 as number | null, max: 150 as number | null },
+  { labelKey: 'filters.durationLong', min: 150 as number | null, max: null as number | null },
+]
+
 @Component({
   selector: 'app-home-filters',
   standalone: true,
-  imports: [BottomSheetComponent, TranslocoModule],
+  imports: [BottomSheetComponent, TranslocoModule, RangeSliderComponent, NgTemplateOutlet],
   templateUrl: './home-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeFiltersComponent {
+export class HomeFiltersComponent implements OnInit {
   protected readonly facade = inject(HomeFacade)
+  private readonly tmdb = inject(TmdbService)
+
   protected readonly isOpen = signal(false)
-  protected readonly genres = GENRES
+  protected readonly genres = signal<{ id: number; name: string }[]>([])
   protected readonly sortOptions = SORT_OPTIONS
+  protected readonly years = YEARS
+  protected readonly durationOptions = DURATION_OPTIONS
+
+  ngOnInit(): void {
+    this.tmdb.getGenres().subscribe((g) => this.genres.set(g))
+  }
 
   open(): void {
     this.isOpen.set(true)
@@ -58,24 +62,51 @@ export class HomeFiltersComponent {
 
   selectGenre(id: number | null): void {
     this.facade.setGenre(id)
-    this.close()
   }
 
-  selectSort(value: string): void {
-    this.facade.setSortBy(value)
+  onYearChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value
+    this.facade.setYear(val ? Number(val) : null)
+  }
+
+  onRatingChange(rating: number): void {
+    this.facade.setMinRating(rating)
+  }
+
+  onDurationSelect(min: number | null, max: number | null): void {
+    this.facade.setRuntimeRange(min, max)
     this.close()
   }
 
   onSortChange(event: Event): void {
-    this.selectSort((event.target as HTMLSelectElement).value)
+    this.facade.setSortBy((event.target as HTMLSelectElement).value)
+  }
+
+  clearFilters(): void {
+    this.facade.setGenre(null)
+    this.facade.setYear(null)
+    this.facade.setMinRating(0)
+    this.facade.setRuntimeRange(null, null)
+    this.facade.setSortBy('popularity.desc')
+    this.close()
   }
 
   genreChipClass(id: number | null): string {
-    const base = 'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors'
+    const base =
+      'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors min-h-[36px]'
     const active = 'bg-(--color-primary) text-white border-(--color-primary)'
     const inactive =
       'border-(--color-border) text-(--color-text-secondary) md:hover:border-(--color-primary)'
     return `${base} ${this.facade.activeGenre() === id ? active : inactive}`
+  }
+
+  durationButtonClass(min: number | null, max: number | null): string {
+    const base = 'px-3 py-1.5 rounded-lg text-sm border transition-colors min-h-[36px]'
+    const isActive = this.facade.minRuntime() === min && this.facade.maxRuntime() === max
+    const active = 'bg-(--color-primary) text-white border-(--color-primary)'
+    const inactive =
+      'border-(--color-border) text-(--color-text-secondary) md:hover:border-(--color-primary)'
+    return `${base} ${isActive ? active : inactive}`
   }
 
   sortRowClass(value: string): string {

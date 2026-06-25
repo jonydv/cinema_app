@@ -1,4 +1,103 @@
-<!-- FAB: visible only on mobile, fixed above bottom tab bar -->
+<!-- Shared filter fields — rendered in both mobile sheet and desktop sidebar via ng-template -->
+<ng-template #filterFields>
+  <!-- Genre chips -->
+  <section>
+    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
+      {{ 'filters.genre' | transloco }}
+    </h3>
+    <div class="flex flex-wrap gap-2">
+      <button type="button" [class]="genreChipClass(null)" (click)="selectGenre(null)">
+        Todos
+      </button>
+      @for (genre of genres(); track genre.id) {
+        <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
+          {{ genre.name }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Year select -->
+  <section>
+    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
+      {{ 'filters.year' | transloco }}
+    </h3>
+    <select
+      class="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+      [value]="facade.activeYear() ?? ''"
+      (change)="onYearChange($event)"
+    >
+      <option value="">Cualquier año</option>
+      @for (year of years; track year) {
+        <option [value]="year">{{ year }}</option>
+      }
+    </select>
+  </section>
+
+  <!-- Min rating slider -->
+  <section>
+    <h3
+      class="mb-2 flex items-center justify-between text-sm font-semibold text-(--color-text-secondary)"
+    >
+      <span>{{ 'filters.minRating' | transloco }}</span>
+      @if (facade.minRating() > 0) {
+        <span class="text-amber-400">★ {{ facade.minRating() }}</span>
+      }
+    </h3>
+    <app-range-slider
+      [min]="0"
+      [max]="10"
+      [step]="0.5"
+      [value]="facade.minRating()"
+      (valueChange)="onRatingChange($event)"
+    />
+  </section>
+
+  <!-- Duration buttons -->
+  <section>
+    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
+      {{ 'filters.duration' | transloco }}
+    </h3>
+    <div class="flex flex-wrap gap-2">
+      @for (opt of durationOptions; track opt.labelKey) {
+        <button
+          type="button"
+          [class]="durationButtonClass(opt.min, opt.max)"
+          (click)="onDurationSelect(opt.min, opt.max)"
+        >
+          {{ opt.labelKey | transloco }}
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Sort -->
+  <section>
+    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
+      {{ 'filters.sortBy' | transloco }}
+    </h3>
+    <select
+      class="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+      [value]="facade.sortBy()"
+      (change)="onSortChange($event)"
+    >
+      @for (opt of sortOptions; track opt.value) {
+        <option [value]="opt.value">{{ opt.labelKey | transloco }}</option>
+      }
+    </select>
+  </section>
+
+  <!-- Clear filters -->
+  <button
+    type="button"
+    class="mt-1 w-full rounded-lg border border-(--color-border) px-4 py-2 text-sm text-(--color-text-secondary) transition-colors min-h-[44px] md:hover:border-(--color-primary)"
+    (click)="clearFilters()"
+  >
+    {{ 'filters.clearFilters' | transloco }}
+  </button>
+</ng-template>
+
+<!-- Mobile: FAB button (hidden on md:) -->
 <button
   type="button"
   class="fixed bottom-[76px] right-4 z-10 flex min-h-[48px] min-w-[48px] items-center justify-center rounded-full bg-(--color-primary) text-white shadow-lg transition-transform active:scale-95 md:hidden"
@@ -22,70 +121,14 @@
   </svg>
 </button>
 
-<!-- Desktop inline filter bar -->
-<div class="mb-4 hidden flex-wrap items-center gap-3 md:flex">
-  <div class="flex flex-wrap gap-2">
-    @for (genre of genres; track genre.label) {
-      <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
-        {{ genre.label }}
-      </button>
-    }
-  </div>
-
-  <select
-    class="ml-auto rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-1.5 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
-    [value]="facade.sortBy()"
-    (change)="onSortChange($event)"
-    [attr.aria-label]="'filters.sortBy' | transloco"
-  >
-    @for (opt of sortOptions; track opt.value) {
-      <option [value]="opt.value">{{ opt.labelKey | transloco }}</option>
-    }
-  </select>
-</div>
-
-<!-- Mobile Bottom Sheet -->
+<!-- Mobile: Bottom sheet -->
 <app-bottom-sheet [isOpen]="isOpen()" [label]="'filters.title' | transloco" (closed)="close()">
-  <div class="flex flex-col gap-6 pb-2">
-    <section>
-      <h3 class="mb-3 font-semibold text-(--color-text-primary)">
-        {{ 'filters.genre' | transloco }}
-      </h3>
-      <div class="flex flex-wrap gap-2">
-        @for (genre of genres; track genre.label) {
-          <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
-            {{ genre.label }}
-          </button>
-        }
-      </div>
-    </section>
-
-    <section>
-      <h3 class="mb-3 font-semibold text-(--color-text-primary)">
-        {{ 'filters.sortBy' | transloco }}
-      </h3>
-      <div class="flex flex-col">
-        @for (opt of sortOptions; track opt.value) {
-          <button type="button" [class]="sortRowClass(opt.value)" (click)="selectSort(opt.value)">
-            <span>{{ opt.labelKey | transloco }}</span>
-            @if (facade.sortBy() === opt.value) {
-              <svg
-                class="size-4 shrink-0"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            }
-          </button>
-        }
-      </div>
-    </section>
+  <div class="flex flex-col gap-5 pb-2">
+    <ng-container [ngTemplateOutlet]="filterFields" />
   </div>
 </app-bottom-sheet>
+
+<!-- Desktop: inline sidebar (hidden below md:) -->
+<div class="hidden md:flex md:w-[220px] md:shrink-0 md:flex-col md:gap-5 md:pt-1">
+  <ng-container [ngTemplateOutlet]="filterFields" />
+</div>
