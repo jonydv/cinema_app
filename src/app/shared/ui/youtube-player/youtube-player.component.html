@@ -1,9 +1,52 @@
 @if (videoKey()) {
-  <lite-youtube
-    [videoid]="videoKey()!"
-    class="w-full rounded-lg"
-    [attr.playlabel]="'movie.watchTrailer' | transloco"
-  ></lite-youtube>
+  <div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+    @if (playing() && isBrowser) {
+      <iframe
+        [src]="embedUrl()!"
+        class="absolute inset-0 h-full w-full"
+        frameborder="0"
+        allowfullscreen
+        allow="
+          accelerometer;
+          autoplay;
+          encrypted-media;
+          gyroscope;
+          picture-in-picture;
+          clipboard-write;
+        "
+        loading="lazy"
+        [title]="'movie.watchTrailer' | transloco"
+      ></iframe>
+    } @else {
+      <img
+        [src]="thumbnailUrl()!"
+        [alt]="'movie.watchTrailer' | transloco"
+        class="h-full w-full object-cover"
+        loading="lazy"
+      />
+      <button
+        type="button"
+        class="absolute inset-0 flex items-center justify-center bg-black/30 transition-colors duration-200 md:hover:bg-black/20"
+        [attr.aria-label]="'movie.watchTrailer' | transloco"
+        (click)="play()"
+      >
+        <div
+          class="flex size-16 items-center justify-center rounded-full bg-red-600 shadow-xl transition-transform duration-200 md:hover:scale-110"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="ml-1 size-8 text-white"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </div>
+      </button>
+    }
+  </div>
+
   <a
     [href]="'https://www.youtube.com/watch?v=' + videoKey()"
     target="_blank"
