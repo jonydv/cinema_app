@@ -1,10 +1,4 @@
-import {
-  afterNextRender,
-  ChangeDetectionStrategy,
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  input,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, input } from '@angular/core'
 
 import { TranslocoModule } from '@ngneat/transloco'
 
@@ -18,12 +12,4 @@ import { TranslocoModule } from '@ngneat/transloco'
 })
 export class YoutubePlayerComponent {
   readonly videoKey = input<string | null>(null)
-
-  constructor() {
-    // afterNextRender runs only in the browser, after the first render+hydration cycle,
-    // guaranteeing the custom element is registered before Angular tries to use it.
-    afterNextRender(() => {
-      import('lite-youtube-embed')
-    })
-  }
 }
