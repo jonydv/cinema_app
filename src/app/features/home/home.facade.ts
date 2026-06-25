@@ -3,7 +3,11 @@ import { inject, Injectable } from '@angular/core'
 import { Movie } from '@data/models/movie.model'
 import { FavoritesStore } from '@store/favorites.store'
 import { MoviesStore } from '@store/movies.store'
+import { NowPlayingStore } from '@store/now-playing.store'
+import { TopRatedStore } from '@store/top-rated.store'
 import { TrendingStore } from '@store/trending.store'
+import { UpcomingStore } from '@store/upcoming.store'
+import { WatchedStore } from '@store/watched.store'
 import { WatchlistStore } from '@store/watchlist.store'
 
 @Injectable({ providedIn: 'root' })
@@ -12,21 +16,35 @@ export class HomeFacade {
   private readonly favoritesStore = inject(FavoritesStore)
   private readonly trendingStore = inject(TrendingStore)
   private readonly watchlistStore = inject(WatchlistStore)
+  private readonly nowPlayingStore = inject(NowPlayingStore)
+  private readonly topRatedStore = inject(TopRatedStore)
+  private readonly upcomingStore = inject(UpcomingStore)
+  private readonly watchedStore = inject(WatchedStore)
 
-  // Popular movies
+  // Populares grid
   readonly movies = this.moviesStore.movies
   readonly isLoading = this.moviesStore.isLoading
   readonly hasMore = this.moviesStore.hasMore
   readonly activeGenre = this.moviesStore.activeGenre
   readonly sortBy = this.moviesStore.sortBy
+  readonly activeYear = this.moviesStore.activeYear
+  readonly minRating = this.moviesStore.minRating
+  readonly minRuntime = this.moviesStore.minRuntime
+  readonly maxRuntime = this.moviesStore.maxRuntime
 
-  // Trending
+  // Carousels
+  readonly nowPlaying = this.nowPlayingStore.entities
+  readonly nowPlayingLoading = this.nowPlayingStore.isLoading
   readonly trending = this.trendingStore.entities
   readonly trendingLoading = this.trendingStore.isLoading
+  readonly topRated = this.topRatedStore.entities
+  readonly topRatedLoading = this.topRatedStore.isLoading
+  readonly upcoming = this.upcomingStore.entities
+  readonly upcomingLoading = this.upcomingStore.isLoading
 
   init(): void {
     this.moviesStore.loadMovies()
-    this.trendingStore.load()
+    // Carousel stores auto-load via withHooks.onInit
   }
 
   loadMore(): void {
@@ -50,6 +68,18 @@ export class HomeFacade {
     return this.watchlistStore.isInWatchlist(id)
   }
 
+  toggleWatched(movie: Movie): void {
+    if (this.watchedStore.isWatched(movie.id)) {
+      this.watchedStore.markUnwatched(movie.id)
+    } else {
+      this.watchedStore.markWatched(movie)
+    }
+  }
+
+  isWatched(id: number): boolean {
+    return this.watchedStore.isWatched(id)
+  }
+
   setGenre(id: number | null): void {
     this.moviesStore.setGenre(id)
     this.moviesStore.loadMovies()
@@ -57,6 +87,21 @@ export class HomeFacade {
 
   setSortBy(sort: string): void {
     this.moviesStore.setSortBy(sort)
+    this.moviesStore.loadMovies()
+  }
+
+  setYear(year: number | null): void {
+    this.moviesStore.setYear(year)
+    this.moviesStore.loadMovies()
+  }
+
+  setMinRating(rating: number): void {
+    this.moviesStore.setMinRating(rating)
+    this.moviesStore.loadMovies()
+  }
+
+  setRuntimeRange(min: number | null, max: number | null): void {
+    this.moviesStore.setRuntimeRange(min, max)
     this.moviesStore.loadMovies()
   }
 }
