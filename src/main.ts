@@ -1,4 +1,5 @@
 import 'lite-youtube-embed'
+import 'lite-youtube-embed/src/lite-yt-embed.css'
 
 import { bootstrapApplication } from '@angular/platform-browser'
 
