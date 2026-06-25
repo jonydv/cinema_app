@@ -16,8 +16,10 @@ export class MovieCardComponent {
   readonly movie = input.required<Movie>()
   readonly isFavorite = input<boolean>(false)
   readonly isInWatchlist = input<boolean>(false)
+  readonly isWatched = input<boolean>(false)
   readonly favoriteToggled = output<Movie>()
   readonly watchlistToggled = output<Movie>()
+  readonly watchedToggled = output<Movie>()
 
   onFavoriteClick(event: Event): void {
     event.preventDefault()
@@ -29,5 +31,11 @@ export class MovieCardComponent {
     event.preventDefault()
     event.stopPropagation()
     this.watchlistToggled.emit(this.movie())
+  }
+
+  onWatchedClick(event: Event): void {
+    event.preventDefault()
+    event.stopPropagation()
+    this.watchedToggled.emit(this.movie())
   }
 }

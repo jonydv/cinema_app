@@ -9,18 +9,46 @@
     </h1>
   </header>
 
-  <!-- Filter bar -->
-  <div class="px-4 md:px-6">
-    <app-home-filters />
-  </div>
+  <!-- Carousel: En cartelera -->
+  @if (facade.nowPlaying().length > 0 || facade.nowPlayingLoading()) {
+    <section class="mb-2">
+      <h2 class="mb-2 px-4 text-sm font-semibold text-(--color-text-secondary) md:px-6">
+        🎬 {{ 'home.nowPlaying' | transloco }}
+      </h2>
+      @if (facade.nowPlayingLoading()) {
+        <div class="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-2 md:px-6">
+          @for (i of skeletonRange; track i) {
+            <div
+              class="skeleton-shimmer h-[180px] w-[120px] shrink-0 rounded-xl md:h-[210px] md:w-[140px]"
+            ></div>
+          }
+        </div>
+      } @else {
+        <app-carousel role="list">
+          @for (movie of facade.nowPlaying(); track movie.id) {
+            <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
+              <app-movie-card
+                [movie]="movie"
+                [isFavorite]="facade.isFavorite(movie.id)"
+                [isInWatchlist]="facade.isInWatchlist(movie.id)"
+                [isWatched]="facade.isWatched(movie.id)"
+                (favoriteToggled)="facade.toggleFavorite($event)"
+                (watchlistToggled)="facade.toggleWatchlist($event)"
+                (watchedToggled)="facade.toggleWatched($event)"
+              />
+            </div>
+          }
+        </app-carousel>
+      }
+    </section>
+  }
 
-  <!-- Trending row -->
+  <!-- Carousel: Trending -->
   @if (facade.trending().length > 0 || facade.trendingLoading()) {
     <section class="mb-2 mt-1">
       <h2 class="mb-2 px-4 text-sm font-semibold text-(--color-text-secondary) md:px-6">
-        {{ 'trending.title' | transloco }}
+        🔥 {{ 'trending.title' | transloco }}
       </h2>
-
       @if (facade.trendingLoading()) {
         <div class="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-2 md:px-6">
           @for (i of skeletonRange; track i) {
@@ -30,62 +58,143 @@
           }
         </div>
       } @else {
-        <div
-          class="scrollbar-hide flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 pb-2 md:px-6"
-          role="list"
-        >
+        <app-carousel role="list">
           @for (movie of facade.trending(); track movie.id) {
             <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
               <app-movie-card
                 [movie]="movie"
                 [isFavorite]="facade.isFavorite(movie.id)"
                 [isInWatchlist]="facade.isInWatchlist(movie.id)"
+                [isWatched]="facade.isWatched(movie.id)"
                 (favoriteToggled)="facade.toggleFavorite($event)"
                 (watchlistToggled)="facade.toggleWatchlist($event)"
+                (watchedToggled)="facade.toggleWatched($event)"
               />
             </div>
           }
-        </div>
+        </app-carousel>
       }
     </section>
   }
 
-  <main class="px-4 pb-28 md:px-6 md:pb-10">
-    <!-- Movie grid -->
-    <div class="grid grid-cols-2 gap-2.5 md:grid-cols-4 lg:grid-cols-5 md:gap-4">
-      @for (movie of facade.movies(); track movie.id) {
-        <app-movie-card
-          [movie]="movie"
-          [isFavorite]="facade.isFavorite(movie.id)"
-          [isInWatchlist]="facade.isInWatchlist(movie.id)"
-          (favoriteToggled)="facade.toggleFavorite($event)"
-          (watchlistToggled)="facade.toggleWatchlist($event)"
-        />
+  <!-- Carousel: Top Rated -->
+  @if (facade.topRated().length > 0 || facade.topRatedLoading()) {
+    <section class="mb-2">
+      <h2 class="mb-2 px-4 text-sm font-semibold text-(--color-text-secondary) md:px-6">
+        ⭐ {{ 'home.topRated' | transloco }}
+      </h2>
+      @if (facade.topRatedLoading()) {
+        <div class="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-2 md:px-6">
+          @for (i of skeletonRange; track i) {
+            <div
+              class="skeleton-shimmer h-[180px] w-[120px] shrink-0 rounded-xl md:h-[210px] md:w-[140px]"
+            ></div>
+          }
+        </div>
+      } @else {
+        <app-carousel role="list">
+          @for (movie of facade.topRated(); track movie.id) {
+            <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
+              <app-movie-card
+                [movie]="movie"
+                [isFavorite]="facade.isFavorite(movie.id)"
+                [isInWatchlist]="facade.isInWatchlist(movie.id)"
+                [isWatched]="facade.isWatched(movie.id)"
+                (favoriteToggled)="facade.toggleFavorite($event)"
+                (watchlistToggled)="facade.toggleWatchlist($event)"
+                (watchedToggled)="facade.toggleWatched($event)"
+              />
+            </div>
+          }
+        </app-carousel>
       }
+    </section>
+  }
 
-      @if (facade.isLoading()) {
-        @for (i of skeletonRange; track i) {
-          <app-skeleton-card />
+  <!-- Carousel: Upcoming -->
+  @if (facade.upcoming().length > 0 || facade.upcomingLoading()) {
+    <section class="mb-4">
+      <h2 class="mb-2 px-4 text-sm font-semibold text-(--color-text-secondary) md:px-6">
+        📅 {{ 'home.upcoming' | transloco }}
+      </h2>
+      @if (facade.upcomingLoading()) {
+        <div class="scrollbar-hide flex gap-2 overflow-x-auto px-4 pb-2 md:px-6">
+          @for (i of skeletonRange; track i) {
+            <div
+              class="skeleton-shimmer h-[180px] w-[120px] shrink-0 rounded-xl md:h-[210px] md:w-[140px]"
+            ></div>
+          }
+        </div>
+      } @else {
+        <app-carousel role="list">
+          @for (movie of facade.upcoming(); track movie.id) {
+            <div class="w-[120px] shrink-0 snap-center md:w-[140px]" role="listitem">
+              <app-movie-card
+                [movie]="movie"
+                [isFavorite]="facade.isFavorite(movie.id)"
+                [isInWatchlist]="facade.isInWatchlist(movie.id)"
+                [isWatched]="facade.isWatched(movie.id)"
+                (favoriteToggled)="facade.toggleFavorite($event)"
+                (watchlistToggled)="facade.toggleWatchlist($event)"
+                (watchedToggled)="facade.toggleWatched($event)"
+              />
+            </div>
+          }
+        </app-carousel>
+      }
+    </section>
+  }
+
+  <!-- Populares: sidebar (desktop) + grid -->
+  <section class="px-4 md:px-6">
+    <h2 class="mb-3 text-sm font-semibold text-(--color-text-secondary)">
+      📊 {{ 'home.popular' | transloco }}
+    </h2>
+
+    <div class="flex gap-6">
+      <!-- HomeFilters: renders FAB+sheet on mobile, inline sidebar on md: -->
+      <app-home-filters />
+
+      <!-- Movie grid -->
+      <main class="min-w-0 flex-1 pb-28 md:pb-10">
+        <div class="grid grid-cols-2 gap-2.5 md:grid-cols-3 lg:grid-cols-4 md:gap-4">
+          @for (movie of facade.movies(); track movie.id) {
+            <app-movie-card
+              [movie]="movie"
+              [isFavorite]="facade.isFavorite(movie.id)"
+              [isInWatchlist]="facade.isInWatchlist(movie.id)"
+              [isWatched]="facade.isWatched(movie.id)"
+              (favoriteToggled)="facade.toggleFavorite($event)"
+              (watchlistToggled)="facade.toggleWatchlist($event)"
+              (watchedToggled)="facade.toggleWatched($event)"
+            />
+          }
+
+          @if (facade.isLoading()) {
+            @for (i of skeletonRange; track i) {
+              <app-skeleton-card />
+            }
+          }
+        </div>
+
+        @if (!facade.isLoading() && facade.movies().length === 0) {
+          <app-empty-state
+            icon="🎬"
+            [title]="'empty.error' | transloco"
+            [subtitle]="'errors.serverError' | transloco"
+          />
         }
-      }
+
+        @if (facade.hasMore()) {
+          <div
+            appInfiniteScroll
+            [threshold]="0.1"
+            (scrolled)="onScrolled()"
+            class="h-8"
+            aria-hidden="true"
+          ></div>
+        }
+      </main>
     </div>
-
-    @if (!facade.isLoading() && facade.movies().length === 0) {
-      <app-empty-state
-        icon="🎬"
-        [title]="'empty.error' | transloco"
-        [subtitle]="'errors.serverError' | transloco"
-      />
-    }
-
-    @if (facade.hasMore()) {
-      <div
-        appInfiniteScroll
-        [threshold]="0.1"
-        (scrolled)="onScrolled()"
-        class="h-8"
-        aria-hidden="true"
-      ></div>
-    }
-  </main>
+  </section>
 </div>
