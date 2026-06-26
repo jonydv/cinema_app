@@ -47,7 +47,7 @@
       [attr.aria-label]="'lang.select' | transloco"
       (click)="toggleLang()"
     >
-      {{ activeLang() === 'es' ? '🇦🇷 ES' : '🇺🇸 EN' }}
+      {{ activeLang() === 'es' ? '🇦🇷' : '🇺🇸' }} {{ 'lang.' + activeLang() | transloco }}
     </button>
 
     <!-- Theme toggle -->
@@ -133,7 +133,7 @@
     <span class="text-xl leading-none" aria-hidden="true">{{
       activeLang() === 'es' ? '🇦🇷' : '🇺🇸'
     }}</span>
-    <span>{{ activeLang() === 'es' ? 'ES' : 'EN' }}</span>
+    <span>{{ 'lang.' + activeLang() | transloco }}</span>
   </button>
 
   <!-- Theme toggle (mobile) -->
