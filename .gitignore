@@ -1,5 +1,3 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
 # Compiled output
 /dist
 /tmp
@@ -30,7 +28,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
+/.angular/
 .sass-cache/
 /connect.lock
 /coverage
@@ -42,3 +40,20 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Environment
+.env
+src/environments/environment.ts
+src/environments/environment.prod.ts
+
+# Claude Code memory (local only)
+.claude/
+
+# Leftover nested project folder (delete manually after restarting VS Code)
+/movie-app-v2/
+
+# Planning & architecture docs (local only, not for VCS)
+plan.md
+arquitecture.md
+implementation_plan.md
+task.md
