@@ -40,6 +40,17 @@
   </nav>
 
   <div class="flex items-center gap-2">
+    <!-- Language toggle -->
+    <button
+      type="button"
+      class="flex h-9 items-center justify-center rounded-full px-2.5 text-xs font-semibold text-(--color-text-secondary) transition-all duration-150 md:hover:bg-(--color-surface) md:hover:text-(--color-text-primary)"
+      [attr.aria-label]="'lang.select' | transloco"
+      (click)="toggleLang()"
+    >
+      {{ activeLang() === 'es' ? '🇦🇷 ES' : '🇺🇸 EN' }}
+    </button>
+
+    <!-- Theme toggle -->
     <button
       type="button"
       class="flex h-9 w-9 items-center justify-center rounded-full text-(--color-text-secondary) transition-all duration-150 md:hover:bg-(--color-surface) md:hover:text-(--color-text-primary)"
@@ -112,6 +123,20 @@
     </a>
   }
 
+  <!-- Language toggle (mobile) -->
+  <button
+    type="button"
+    class="flex min-h-[48px] min-w-[56px] flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-(--color-text-secondary)"
+    [attr.aria-label]="'lang.select' | transloco"
+    (click)="toggleLang()"
+  >
+    <span class="text-xl leading-none" aria-hidden="true">{{
+      activeLang() === 'es' ? '🇦🇷' : '🇺🇸'
+    }}</span>
+    <span>{{ activeLang() === 'es' ? 'ES' : 'EN' }}</span>
+  </button>
+
+  <!-- Theme toggle (mobile) -->
   <button
     type="button"
     class="flex min-h-[48px] min-w-[56px] flex-col items-center justify-center gap-0.5 text-[10px] font-medium text-(--color-text-secondary)"
