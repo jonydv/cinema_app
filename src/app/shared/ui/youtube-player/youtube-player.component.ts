@@ -31,7 +31,7 @@ export class YoutubePlayerComponent {
     const key = this.videoKey()
     if (!key) return null
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube.com/embed/${key}?enablejsapi=1&autoplay=1&rel=0`,
+      `https://www.youtube.com/embed/${key}?enablejsapi=1&rel=0`,
     )
   })
 

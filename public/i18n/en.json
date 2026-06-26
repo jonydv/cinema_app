@@ -37,7 +37,8 @@
     "releaseYear": "Year",
     "markWatched": "Mark as watched",
     "markUnwatched": "Remove from watched",
-    "watched": "Watched"
+    "watched": "Watched",
+    "noTrailer": "No trailer available"
   },
   "favorites": {
     "title": "My Favorites",

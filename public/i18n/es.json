@@ -37,7 +37,8 @@
     "releaseYear": "Año",
     "markWatched": "Marcar como visto",
     "markUnwatched": "Quitar de vistos",
-    "watched": "Visto"
+    "watched": "Visto",
+    "noTrailer": "Sin trailer disponible"
   },
   "favorites": {
     "title": "Mis favoritos",
