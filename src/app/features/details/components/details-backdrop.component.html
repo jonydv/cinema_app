@@ -55,12 +55,14 @@
 
 <!-- Metadata chips row -->
 <div class="flex flex-wrap items-center gap-2 px-4 py-3 md:px-6">
-  @for (genre of movie().genres; track genre) {
-    <span
-      class="rounded-full bg-(--color-surface-2) px-3 py-1 text-xs font-medium text-(--color-text-secondary)"
+  @for (entry of genreEntries(); track entry.id) {
+    <button
+      type="button"
+      class="rounded-full bg-(--color-surface-2) px-3 py-1 text-xs font-medium text-(--color-text-secondary) transition-colors duration-200 md:hover:bg-(--color-primary) md:hover:text-white"
+      (click)="genreClicked.emit(entry.id)"
     >
-      {{ genre }}
-    </span>
+      {{ entry.name }}
+    </button>
   }
 
   <div class="ml-auto flex items-center gap-4 text-sm">

@@ -3,6 +3,7 @@
     [movie]="movie"
     [isFavorite]="facade.isFavorite(movie.id)"
     (favoriteToggled)="facade.toggleFavorite($event)"
+    (genreClicked)="facade.navigateToGenre($event)"
   />
 
   <!-- Overview -->
