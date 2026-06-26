@@ -49,6 +49,11 @@
           <span class="text-[10px] font-bold text-amber-400">★ {{ movie().rating }}</span>
           <span class="text-[10px] text-white/60">{{ movie().releaseYear }}</span>
         </div>
+        @if (movie().voteCount > 0) {
+          <p class="mt-0.5 text-[9px] text-white/45">
+            {{ formatVoteCount(movie().voteCount) }} votos
+          </p>
+        }
       </div>
     </div>
   </a>

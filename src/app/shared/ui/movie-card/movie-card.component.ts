@@ -21,6 +21,12 @@ export class MovieCardComponent {
   readonly watchlistToggled = output<Movie>()
   readonly watchedToggled = output<Movie>()
 
+  formatVoteCount(count: number): string {
+    if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`
+    if (count >= 1_000) return `${(count / 1_000).toFixed(1)}K`
+    return String(count)
+  }
+
   onFavoriteClick(event: Event): void {
     event.preventDefault()
     event.stopPropagation()

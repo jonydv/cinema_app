@@ -11,6 +11,7 @@
   "home": {
     "title": "Popular Movies",
     "loadMore": "Load more",
+    "discover": "Discover",
     "nowPlaying": "Now Playing",
     "topRated": "Top Rated",
     "upcoming": "Upcoming",
