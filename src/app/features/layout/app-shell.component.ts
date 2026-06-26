@@ -61,6 +61,9 @@ export class AppShellComponent implements OnInit {
         const path = e.urlAfterRedirects.split('?')[0]
         if (path !== previousPath) {
           previousPath = path
+          if (this.isBrowser) {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
           document.querySelector<HTMLElement>('#main-content h1')?.focus()
         }
       })

@@ -6,7 +6,12 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core'
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser'
-import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router'
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withInMemoryScrolling,
+  withViewTransitions,
+} from '@angular/router'
 import { provideServiceWorker } from '@angular/service-worker'
 
 import { provideTransloco } from '@ngneat/transloco'
@@ -22,7 +27,12 @@ import { routes } from './app.routes'
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
+    provideRouter(
+      routes,
+      withComponentInputBinding(),
+      withViewTransitions(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'disabled' }),
+    ),
     provideClientHydration(withEventReplay()),
     provideHttpClient(
       withFetch(),
