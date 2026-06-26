@@ -40,6 +40,11 @@ const LANG_MAP: Record<string, string> = {
   en: 'en-US',
 }
 
+const REGION_MAP: Record<string, string> = {
+  es: 'AR',
+  en: 'US',
+}
+
 @Injectable({ providedIn: 'root' })
 export class TmdbService {
   private readonly http = inject(HttpClient)
@@ -50,10 +55,14 @@ export class TmdbService {
     return LANG_MAP[this.transloco.getActiveLang()] ?? 'en-US'
   }
 
+  private get region(): string {
+    return REGION_MAP[this.transloco.getActiveLang()] ?? 'US'
+  }
+
   getPopularMovies(page = 1): Observable<PagedMovies> {
     return this.http
       .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/popular`, {
-        params: { page: String(page), language: this.lang },
+        params: { page: String(page), language: this.lang, region: this.region },
       })
       .pipe(
         map((res) => ({
@@ -102,7 +111,7 @@ export class TmdbService {
   getNowPlaying(page = 1): Observable<PagedMovies> {
     return this.http
       .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/now_playing`, {
-        params: { page: String(page), language: this.lang },
+        params: { page: String(page), language: this.lang, region: this.region },
       })
       .pipe(
         map((res) => ({
@@ -116,7 +125,7 @@ export class TmdbService {
   getTopRated(page = 1): Observable<PagedMovies> {
     return this.http
       .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/top_rated`, {
-        params: { page: String(page), language: this.lang },
+        params: { page: String(page), language: this.lang, region: this.region },
       })
       .pipe(
         map((res) => ({
@@ -130,7 +139,7 @@ export class TmdbService {
   getUpcoming(page = 1): Observable<PagedMovies> {
     return this.http
       .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/upcoming`, {
-        params: { page: String(page), language: this.lang },
+        params: { page: String(page), language: this.lang, region: this.region },
       })
       .pipe(
         map((res) => ({
