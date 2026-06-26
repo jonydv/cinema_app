@@ -1,5 +1,21 @@
 <!-- Shared filter fields — rendered in both mobile sheet and desktop sidebar via ng-template -->
 <ng-template #filterFields>
+  <!-- Sort (first) -->
+  <section>
+    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
+      {{ 'filters.sortBy' | transloco }}
+    </h3>
+    <select
+      class="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+      [value]="facade.sortBy()"
+      (change)="onSortChange($event)"
+    >
+      @for (opt of sortOptions; track opt.value) {
+        <option [value]="opt.value">{{ opt.labelKey | transloco }}</option>
+      }
+    </select>
+  </section>
+
   <!-- Genre chips -->
   <section>
     <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
@@ -7,7 +23,7 @@
     </h3>
     <div class="flex flex-wrap gap-2">
       <button type="button" [class]="genreChipClass(null)" (click)="selectGenre(null)">
-        Todos
+        {{ 'filters.all' | transloco }}
       </button>
       @for (genre of genres(); track genre.id) {
         <button type="button" [class]="genreChipClass(genre.id)" (click)="selectGenre(genre.id)">
@@ -17,21 +33,34 @@
     </div>
   </section>
 
-  <!-- Year select -->
+  <!-- Year range -->
   <section>
     <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
       {{ 'filters.year' | transloco }}
     </h3>
-    <select
-      class="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
-      [value]="facade.activeYear() ?? ''"
-      (change)="onYearChange($event)"
-    >
-      <option value="">Cualquier año</option>
-      @for (year of years; track year) {
-        <option [value]="year">{{ year }}</option>
-      }
-    </select>
+    <div class="flex items-center gap-2">
+      <select
+        class="min-w-0 flex-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+        [value]="facade.yearFrom() ?? ''"
+        (change)="onYearFromChange($event)"
+      >
+        <option value="">{{ 'filters.yearFrom' | transloco }}</option>
+        @for (year of yearsFrom(); track year) {
+          <option [value]="year">{{ year }}</option>
+        }
+      </select>
+      <span class="shrink-0 text-xs text-(--color-text-secondary)">—</span>
+      <select
+        class="min-w-0 flex-1 rounded-lg border border-(--color-border) bg-(--color-surface) px-2 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
+        [value]="facade.yearTo() ?? ''"
+        (change)="onYearToChange($event)"
+      >
+        <option value="">{{ 'filters.yearTo' | transloco }}</option>
+        @for (year of yearsTo(); track year) {
+          <option [value]="year">{{ year }}</option>
+        }
+      </select>
+    </div>
   </section>
 
   <!-- Min rating slider -->
@@ -71,26 +100,10 @@
     </div>
   </section>
 
-  <!-- Sort -->
-  <section>
-    <h3 class="mb-2 text-sm font-semibold text-(--color-text-secondary)">
-      {{ 'filters.sortBy' | transloco }}
-    </h3>
-    <select
-      class="w-full rounded-lg border border-(--color-border) bg-(--color-surface) px-3 py-2 text-sm text-(--color-text-primary) focus:outline-none focus:ring-2 focus:ring-(--color-primary)"
-      [value]="facade.sortBy()"
-      (change)="onSortChange($event)"
-    >
-      @for (opt of sortOptions; track opt.value) {
-        <option [value]="opt.value">{{ opt.labelKey | transloco }}</option>
-      }
-    </select>
-  </section>
-
   <!-- Clear filters -->
   <button
     type="button"
-    class="mt-1 w-full rounded-lg border border-(--color-border) px-4 py-2 text-sm text-(--color-text-secondary) transition-colors min-h-[44px] md:hover:border-(--color-primary)"
+    class="mt-1 min-h-[44px] w-full rounded-lg border border-(--color-border) px-4 py-2 text-sm text-(--color-text-secondary) transition-colors md:hover:border-(--color-primary)"
     (click)="clearFilters()"
   >
     {{ 'filters.clearFilters' | transloco }}

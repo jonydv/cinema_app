@@ -77,7 +77,8 @@ export class TmdbService {
     page = 1,
     genreId: number | null = null,
     sortBy = 'popularity.desc',
-    year: number | null = null,
+    yearFrom: number | null = null,
+    yearTo: number | null = null,
     minRating = 0,
     minRuntime: number | null = null,
     maxRuntime: number | null = null,
@@ -89,7 +90,8 @@ export class TmdbService {
       language: this.lang,
     }
     if (genreId !== null) params['with_genres'] = String(genreId)
-    if (year !== null) params['primary_release_year'] = String(year)
+    if (yearFrom !== null) params['primary_release_date.gte'] = `${yearFrom}-01-01`
+    if (yearTo !== null) params['primary_release_date.lte'] = `${yearTo}-12-31`
     if (minRating > 0) {
       params['vote_average.gte'] = String(minRating)
       params['vote_count.gte'] = '100'

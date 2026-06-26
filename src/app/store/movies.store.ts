@@ -27,7 +27,8 @@ export const MoviesStore = signalStore(
   withState({
     activeGenre: null as number | null,
     sortBy: 'popularity.desc',
-    activeYear: null as number | null,
+    yearFrom: null as number | null,
+    yearTo: null as number | null,
     minRating: 0,
     minRuntime: null as number | null,
     maxRuntime: null as number | null,
@@ -39,7 +40,8 @@ export const MoviesStore = signalStore(
     const isFiltered = (): boolean =>
       store.activeGenre() !== null ||
       store.sortBy() !== 'popularity.desc' ||
-      store.activeYear() !== null ||
+      store.yearFrom() !== null ||
+      store.yearTo() !== null ||
       store.minRating() > 0 ||
       store.minRuntime() !== null ||
       store.maxRuntime() !== null
@@ -50,7 +52,8 @@ export const MoviesStore = signalStore(
           page,
           store.activeGenre(),
           store.sortBy(),
-          store.activeYear(),
+          store.yearFrom(),
+          store.yearTo(),
           store.minRating(),
           store.minRuntime(),
           store.maxRuntime(),
@@ -106,8 +109,8 @@ export const MoviesStore = signalStore(
         patchState(store, { sortBy: sort })
       },
 
-      setYear(year: number | null): void {
-        patchState(store, { activeYear: year })
+      setYearRange(from: number | null, to: number | null): void {
+        patchState(store, { yearFrom: from, yearTo: to })
       },
 
       setMinRating(rating: number): void {

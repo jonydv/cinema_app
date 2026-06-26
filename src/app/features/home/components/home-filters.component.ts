@@ -1,7 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
-import { TranslocoModule } from '@ngneat/transloco'
+import { switchMap } from 'rxjs/operators'
+
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco'
 
 import { TmdbService } from '@data/api/tmdb.service'
 
@@ -38,18 +41,32 @@ const DURATION_OPTIONS = [
   templateUrl: './home-filters.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HomeFiltersComponent implements OnInit {
+export class HomeFiltersComponent {
   protected readonly facade = inject(HomeFacade)
   private readonly tmdb = inject(TmdbService)
 
   protected readonly isOpen = signal(false)
   protected readonly genres = signal<{ id: number; name: string }[]>([])
   protected readonly sortOptions = SORT_OPTIONS
-  protected readonly years = YEARS
   protected readonly durationOptions = DURATION_OPTIONS
 
-  ngOnInit(): void {
-    this.tmdb.getGenres().subscribe((g) => this.genres.set(g))
+  constructor() {
+    inject(TranslocoService)
+      .langChanges$.pipe(
+        switchMap(() => this.tmdb.getGenres()),
+        takeUntilDestroyed(),
+      )
+      .subscribe((g) => this.genres.set(g))
+  }
+
+  protected yearsFrom(): number[] {
+    const to = this.facade.yearTo()
+    return to !== null ? YEARS.filter((y) => y <= to) : YEARS
+  }
+
+  protected yearsTo(): number[] {
+    const from = this.facade.yearFrom()
+    return from !== null ? YEARS.filter((y) => y >= from) : YEARS
   }
 
   open(): void {
@@ -64,9 +81,18 @@ export class HomeFiltersComponent implements OnInit {
     this.facade.setGenre(id)
   }
 
-  onYearChange(event: Event): void {
+  onYearFromChange(event: Event): void {
     const val = (event.target as HTMLSelectElement).value
-    this.facade.setYear(val ? Number(val) : null)
+    const from = val ? Number(val) : null
+    const to = this.facade.yearTo()
+    this.facade.setYearRange(from, from !== null && to !== null && to < from ? null : to)
+  }
+
+  onYearToChange(event: Event): void {
+    const val = (event.target as HTMLSelectElement).value
+    const to = val ? Number(val) : null
+    const from = this.facade.yearFrom()
+    this.facade.setYearRange(from !== null && to !== null && from > to ? null : from, to)
   }
 
   onRatingChange(rating: number): void {
@@ -84,7 +110,7 @@ export class HomeFiltersComponent implements OnInit {
 
   clearFilters(): void {
     this.facade.setGenre(null)
-    this.facade.setYear(null)
+    this.facade.setYearRange(null, null)
     this.facade.setMinRating(0)
     this.facade.setRuntimeRange(null, null)
     this.facade.setSortBy('popularity.desc')

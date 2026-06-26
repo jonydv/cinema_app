@@ -61,7 +61,10 @@
     "durationShort": "< 90 min",
     "durationMedium": "90–150 min",
     "durationLong": "> 150 min",
-    "clearFilters": "Clear filters"
+    "clearFilters": "Clear filters",
+    "all": "All",
+    "yearFrom": "From",
+    "yearTo": "To"
   },
   "empty": {
     "favorites": "No favorites yet",

@@ -27,7 +27,8 @@ export class HomeFacade {
   readonly hasMore = this.moviesStore.hasMore
   readonly activeGenre = this.moviesStore.activeGenre
   readonly sortBy = this.moviesStore.sortBy
-  readonly activeYear = this.moviesStore.activeYear
+  readonly yearFrom = this.moviesStore.yearFrom
+  readonly yearTo = this.moviesStore.yearTo
   readonly minRating = this.moviesStore.minRating
   readonly minRuntime = this.moviesStore.minRuntime
   readonly maxRuntime = this.moviesStore.maxRuntime
@@ -90,8 +91,8 @@ export class HomeFacade {
     this.moviesStore.loadMovies()
   }
 
-  setYear(year: number | null): void {
-    this.moviesStore.setYear(year)
+  setYearRange(from: number | null, to: number | null): void {
+    this.moviesStore.setYearRange(from, to)
     this.moviesStore.loadMovies()
   }
 
