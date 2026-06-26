@@ -1,0 +1,65 @@
+<div class="group relative">
+  <!-- Left edge: gradient fade + prev button (desktop only, appears on hover) -->
+  @if (canScrollLeft()) {
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute bottom-0 left-0 top-0 z-10 hidden w-16 bg-linear-to-r from-(--color-bg) to-transparent md:block"
+    ></div>
+    <button
+      type="button"
+      aria-label="Anterior"
+      class="absolute left-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-(--color-surface) opacity-0 shadow-md ring-1 ring-black/10 transition-all duration-200 group-hover:opacity-100 hover:scale-110 md:flex"
+      (click)="scrollPrev()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 text-(--color-text-primary)"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+  }
+
+  <!-- Scrollable strip — snap on mobile (touch), no snap on desktop (drag) -->
+  <div
+    #strip
+    appDragScroll
+    [class]="
+      'scrollbar-hide flex snap-x snap-mandatory md:snap-none overflow-x-auto ' + scrollClass()
+    "
+    (scroll)="onScroll()"
+  >
+    <ng-content />
+  </div>
+
+  <!-- Right edge: gradient fade + next button (desktop only, appears on hover) -->
+  @if (canScrollRight()) {
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute bottom-0 right-0 top-0 z-10 hidden w-16 bg-linear-to-l from-(--color-bg) to-transparent md:block"
+    ></div>
+    <button
+      type="button"
+      aria-label="Siguiente"
+      class="absolute right-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-(--color-surface) opacity-0 shadow-md ring-1 ring-black/10 transition-all duration-200 group-hover:opacity-100 hover:scale-110 md:flex"
+      (click)="scrollNext()"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-4 w-4 text-(--color-text-primary)"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2.5"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  }
+</div>
