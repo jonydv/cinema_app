@@ -3,7 +3,7 @@ import { inject, Injectable, PLATFORM_ID } from '@angular/core'
 import { Meta, Title } from '@angular/platform-browser'
 
 const APP_NAME = 'CineScope'
-const APP_URL = 'https://cinemascope.vercel.app'
+const APP_URL = 'https://cinemascope-jdv.vercel.app'
 const APP_OG_IMAGE = `${APP_URL}/og-image.png`
 
 @Injectable({ providedIn: 'root' })
