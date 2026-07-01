@@ -1,7 +1,7 @@
 <article
   class="group relative overflow-hidden rounded-xl bg-(--color-surface) shadow-sm ring-1 ring-black/5 transition-all duration-300 dark:ring-white/5 md:hover:scale-[1.04] md:hover:shadow-2xl md:hover:shadow-black/40"
   [class.ring-2]="isWatched()"
-  [class.ring-emerald-500/40]="isWatched()"
+  [class.ring-(--color-watched)/40]="isWatched()"
   [attr.aria-label]="'a11y.movieCard' | transloco: { title: movie().title }"
 >
   <a
@@ -21,7 +21,7 @@
 
       <!-- Watched overlay tint -->
       @if (isWatched()) {
-        <div class="absolute inset-0 bg-emerald-500/10"></div>
+        <div class="absolute inset-0 bg-(--color-watched)/10"></div>
       }
 
       <!-- Gradient overlay -->
@@ -32,7 +32,7 @@
       <!-- "✓ Visto" badge — top left -->
       @if (isWatched()) {
         <div
-          class="absolute left-1.5 top-1.5 rounded-md bg-emerald-500 px-1.5 py-0.5 text-[9px] font-bold text-white"
+          class="absolute left-1.5 top-1.5 rounded-md bg-(--color-watched) px-1.5 py-0.5 text-[9px] font-bold text-white"
         >
           ✓ {{ 'movie.watched' | transloco }}
         </div>
@@ -46,7 +46,7 @@
           {{ movie().title }}
         </h2>
         <div class="mt-1 flex items-center gap-1.5">
-          <span class="text-[10px] font-bold text-amber-400">★ {{ movie().rating }}</span>
+          <span class="text-[10px] font-bold text-(--color-rating)">★ {{ movie().rating }}</span>
           <span class="text-[10px] text-white/60">{{ movie().releaseYear }}</span>
         </div>
         @if (movie().voteCount > 0) {
@@ -61,12 +61,11 @@
   <!-- Action buttons — top-right stack -->
   <div class="absolute right-1.5 top-1.5 flex flex-col gap-1">
     <!-- Favorite -->
-    <button
-      type="button"
-      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110 md:hover:bg-(--color-primary)"
-      [attr.aria-label]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
-      [attr.aria-pressed]="isFavorite()"
-      (click)="onFavoriteClick($event)"
+    <app-icon-action-button
+      extraClass="md:hover:bg-(--color-primary)"
+      [active]="isFavorite()"
+      [ariaLabel]="(isFavorite() ? 'movie.removeFavorite' : 'movie.addFavorite') | transloco"
+      (clicked)="onFavoriteClick()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -84,17 +83,14 @@
           d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
         />
       </svg>
-    </button>
+    </app-icon-action-button>
 
     <!-- Watchlist -->
-    <button
-      type="button"
-      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110 md:hover:bg-blue-600"
-      [attr.aria-label]="
-        (isInWatchlist() ? 'movie.removeWatchlist' : 'movie.addWatchlist') | transloco
-      "
-      [attr.aria-pressed]="isInWatchlist()"
-      (click)="onWatchlistClick($event)"
+    <app-icon-action-button
+      extraClass="md:hover:bg-(--color-watchlist)"
+      [active]="isInWatchlist()"
+      [ariaLabel]="(isInWatchlist() ? 'movie.removeWatchlist' : 'movie.addWatchlist') | transloco"
+      (clicked)="onWatchlistClick()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -104,20 +100,18 @@
         [attr.fill]="isInWatchlist() ? '#3b82f6' : 'none'"
         stroke="currentColor"
         stroke-width="2"
-        [class.text-blue-400]="isInWatchlist()"
+        [class.text-(--color-watchlist)]="isInWatchlist()"
       >
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
       </svg>
-    </button>
+    </app-icon-action-button>
 
     <!-- Watched toggle -->
-    <button
-      type="button"
-      class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-full bg-black/55 text-white backdrop-blur-md transition-all duration-200 md:hover:scale-110"
-      [class.bg-emerald-600/80]="isWatched()"
-      [attr.aria-label]="(isWatched() ? 'movie.markUnwatched' : 'movie.markWatched') | transloco"
-      [attr.aria-pressed]="isWatched()"
-      (click)="onWatchedClick($event)"
+    <app-icon-action-button
+      [extraClass]="isWatched() ? 'bg-(--color-watched)/80' : ''"
+      [active]="isWatched()"
+      [ariaLabel]="(isWatched() ? 'movie.markUnwatched' : 'movie.markWatched') | transloco"
+      (clicked)="onWatchedClick()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -136,6 +130,6 @@
           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
         />
       </svg>
-    </button>
+    </app-icon-action-button>
   </div>
 </article>

@@ -6,6 +6,7 @@ import { FavoritesStore } from '@store/favorites.store'
 import { MovieDetailStore } from '@store/movie-detail.store'
 import { MoviesStore } from '@store/movies.store'
 import { RatingsStore } from '@store/ratings.store'
+import { RecentlyViewedStore } from '@store/recently-viewed.store'
 import { RecommendationsStore } from '@store/recommendations.store'
 import { WatchedStore } from '@store/watched.store'
 import { WatchlistStore } from '@store/watchlist.store'
@@ -17,6 +18,7 @@ export class DetailsFacade {
   private readonly watchlistStore = inject(WatchlistStore)
   private readonly ratingsStore = inject(RatingsStore)
   private readonly recommendationsStore = inject(RecommendationsStore)
+  private readonly recentlyViewedStore = inject(RecentlyViewedStore)
   private readonly watchedStore = inject(WatchedStore)
   private readonly moviesStore = inject(MoviesStore)
   private readonly router = inject(Router)
@@ -25,6 +27,8 @@ export class DetailsFacade {
   readonly isLoading = this.detailStore.isLoading
   readonly error = this.detailStore.error
   readonly watchProviders = this.detailStore.watchProviders
+  readonly reviews = this.detailStore.reviews
+  readonly recentlyViewed = this.recentlyViewedStore.recentlyViewed
 
   readonly recommendations = this.recommendationsStore.entities
   readonly recommendationsLoading = this.recommendationsStore.isLoading
@@ -32,6 +36,10 @@ export class DetailsFacade {
   loadMovie(id: number): void {
     this.detailStore.loadMovie(id)
     this.recommendationsStore.load(id)
+  }
+
+  addToRecentlyViewed(movie: Movie): void {
+    this.recentlyViewedStore.addVisit(movie)
   }
 
   clear(): void {

@@ -6,13 +6,14 @@ import { SeoMetadataService } from '@core/seo/seo-metadata.service'
 
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component'
 import { MovieCardComponent } from '@shared/ui/movie-card/movie-card.component'
+import { MovieGridComponent } from '@shared/ui/movie-grid/movie-grid.component'
 
 import { WatchlistFacade } from './watchlist.facade'
 
 @Component({
   selector: 'app-watchlist-page',
   standalone: true,
-  imports: [TranslocoModule, MovieCardComponent, EmptyStateComponent],
+  imports: [TranslocoModule, MovieCardComponent, EmptyStateComponent, MovieGridComponent],
   templateUrl: './watchlist.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

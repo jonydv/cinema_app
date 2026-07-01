@@ -1,5 +1,6 @@
 import { A11yModule, FocusTrap, FocusTrapFactory } from '@angular/cdk/a11y'
 import {
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   effect,
@@ -33,8 +34,7 @@ export class BottomSheetComponent implements OnDestroy {
   constructor() {
     effect(() => {
       if (this.isOpen()) {
-        // Defer one tick to ensure the DOM is visible before trapping
-        setTimeout(() => this.activateFocusTrap())
+        afterNextRender(() => this.activateFocusTrap())
       } else {
         this.deactivateFocusTrap()
       }

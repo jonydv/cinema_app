@@ -7,63 +7,70 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core'
-import { toSignal } from '@angular/core/rxjs-interop'
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router'
+import { NavigationEnd, NavigationStart, Router, RouterOutlet } from '@angular/router'
+import { RouterLink } from '@angular/router'
 
 import { filter } from 'rxjs/operators'
 
-import { TranslocoModule, TranslocoService } from '@ngneat/transloco'
+import { TranslocoModule } from '@ngneat/transloco'
 
 import { ThemeService } from '@core/theme/theme.service'
 
-import { FavoritesStore } from '@store/favorites.store'
-
+import { LogoComponent } from '@shared/ui/logo/logo.component'
 import { ToastComponent } from '@shared/ui/toast/toast.component'
+
+import { DesktopNavbarComponent } from './components/desktop-navbar.component'
+import { MobileTabBarComponent } from './components/mobile-tab-bar.component'
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TranslocoModule, ToastComponent],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    TranslocoModule,
+    ToastComponent,
+    LogoComponent,
+    DesktopNavbarComponent,
+    MobileTabBarComponent,
+  ],
   templateUrl: './app-shell.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppShellComponent implements OnInit {
-  readonly themeService = inject(ThemeService)
-  readonly favoritesStore = inject(FavoritesStore)
   private readonly router = inject(Router)
   private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
-  private readonly transloco = inject(TranslocoService)
+  protected readonly themeService = inject(ThemeService)
 
-  readonly activeLang = toSignal(this.transloco.langChanges$, {
-    initialValue: this.transloco.getActiveLang(),
-  })
-  protected readonly settingsOpen = signal(false)
-
-  readonly navItems = [
-    { path: '/', label: 'nav.home', icon: '🏠', exact: true },
-    { path: '/search', label: 'nav.search', icon: '🔍', exact: false },
-    { path: '/favorites', label: 'nav.favorites', icon: '♥', exact: false },
-    { path: '/watchlist', label: 'nav.watchlist', icon: '📋', exact: false },
-    { path: '/history', label: 'nav.history', icon: '📺', exact: false },
-  ] as const
-
+  protected readonly currentYear = new Date().getFullYear()
   protected readonly canInstall = signal(false)
   private deferredInstallPrompt: BeforeInstallPromptEvent | null = null
 
   ngOnInit(): void {
-    // Move focus to main heading after each navigation for a11y.
-    // Only triggers on path changes — not on query-param-only updates (e.g. search input),
-    // which also fire NavigationEnd but must not steal focus from the active input.
-    let previousPath: string | undefined = ''
+    // Scroll to top before the View Transitions API captures state.
+    // Must fire at NavigationStart — calling scrollTo at NavigationEnd is too late because
+    // withViewTransitions() has already snapshotted the old scroll position by then.
+    // Uses 'instant' to avoid a smooth-scroll animation fighting the view transition.
+    this.router.events
+      .pipe(filter((e): e is NavigationStart => e instanceof NavigationStart))
+      .subscribe((e) => {
+        if (!this.isBrowser) return
+        const currentPath = this.router.url.split('?')[0]
+        const nextPath = e.url.split('?')[0]
+        if (nextPath !== currentPath) {
+          window.scrollTo({ top: 0, behavior: 'instant' })
+        }
+      })
+
+    // Move focus to main heading after navigation for a11y.
+    // Only triggers on path changes — not on query-param-only updates (e.g. search input).
+    let previousPath = ''
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
-        const path = e.urlAfterRedirects.split('?')[0]
+        const path = (e.urlAfterRedirects ?? e.url).split('?')[0] ?? ''
         if (path !== previousPath) {
           previousPath = path
-          if (this.isBrowser) {
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }
           document.querySelector<HTMLElement>('#main-content h1')?.focus()
         }
       })
@@ -94,9 +101,5 @@ export class AppShellComponent implements OnInit {
 
   protected dismissInstall(): void {
     this.canInstall.set(false)
-  }
-
-  toggleLang(): void {
-    this.transloco.setActiveLang(this.transloco.getActiveLang() === 'es' ? 'en' : 'es')
   }
 }

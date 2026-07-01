@@ -45,7 +45,7 @@
 
   <!-- Favorites grid -->
   @if (facade.favorites().length > 0) {
-    <div class="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+    <app-movie-grid>
       @for (movie of facade.favorites(); track movie.id) {
         <app-movie-card
           [movie]="movie"
@@ -53,7 +53,7 @@
           (favoriteToggled)="facade.toggleFavorite($event)"
         />
       }
-    </div>
+    </app-movie-grid>
   } @else {
     <app-empty-state
       icon="🤍"

@@ -6,10 +6,13 @@ import { forkJoin, map, Observable } from 'rxjs'
 import { TranslocoService } from '@ngneat/transloco'
 
 import {
+  adaptActor,
   adaptMovie,
   adaptMovieDetail,
   adaptPerson,
+  adaptReview,
   adaptWatchProviders,
+  MAX_CAST_MEMBERS,
 } from '@data/api/adapters/movie.adapter'
 import {
   TmdbCreditsDto,
@@ -18,12 +21,14 @@ import {
   TmdbPagedResponseDto,
   TmdbPersonCreditsDto,
   TmdbPersonDto,
+  TmdbReviewsResponseDto,
   TmdbVideosDto,
   TmdbWatchProvidersResponseDto,
 } from '@data/api/dtos/tmdb-movie.dto'
 import {
   Actor,
   MovieDetail,
+  MovieReview,
   PagedMovies,
   PersonDetail,
   WatchProvider,
@@ -59,18 +64,22 @@ export class TmdbService {
     return REGION_MAP[this.transloco.getActiveLang()] ?? 'US'
   }
 
+  private _fetchMovieList(url: string, params: Record<string, string>): Observable<PagedMovies> {
+    return this.http.get<TmdbPagedResponseDto<TmdbMovieDto>>(url, { params }).pipe(
+      map((res) => ({
+        movies: res.results.map(adaptMovie),
+        totalPages: res.total_pages,
+        totalResults: res.total_results,
+      })),
+    )
+  }
+
   getPopularMovies(page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/popular`, {
-        params: { page: String(page), language: this.lang, region: this.region },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/movie/popular`, {
+      page: String(page),
+      language: this.lang,
+      region: this.region,
+    })
   }
 
   getDiscoverMovies(
@@ -82,6 +91,7 @@ export class TmdbService {
     minRating = 0,
     minRuntime: number | null = null,
     maxRuntime: number | null = null,
+    minVoteCount: number | null = null,
   ): Observable<PagedMovies> {
     const params: Record<string, string> = {
       page: String(page),
@@ -92,64 +102,37 @@ export class TmdbService {
     if (genreId !== null) params['with_genres'] = String(genreId)
     if (yearFrom !== null) params['primary_release_date.gte'] = `${yearFrom}-01-01`
     if (yearTo !== null) params['primary_release_date.lte'] = `${yearTo}-12-31`
-    if (minRating > 0) {
-      params['vote_average.gte'] = String(minRating)
-      params['vote_count.gte'] = '100'
-    }
+    if (minRating > 0) params['vote_average.gte'] = String(minRating)
+    const voteCount = minVoteCount ?? (minRating > 0 ? 100 : null)
+    if (voteCount !== null) params['vote_count.gte'] = String(voteCount)
     if (minRuntime !== null) params['with_runtime.gte'] = String(minRuntime)
     if (maxRuntime !== null) params['with_runtime.lte'] = String(maxRuntime)
 
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/discover/movie`, { params })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/discover/movie`, params)
   }
 
   getNowPlaying(page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/now_playing`, {
-        params: { page: String(page), language: this.lang, region: this.region },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/movie/now_playing`, {
+      page: String(page),
+      language: this.lang,
+      region: this.region,
+    })
   }
 
   getTopRated(page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/top_rated`, {
-        params: { page: String(page), language: this.lang, region: this.region },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/movie/top_rated`, {
+      page: String(page),
+      language: this.lang,
+      region: this.region,
+    })
   }
 
   getUpcoming(page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/upcoming`, {
-        params: { page: String(page), language: this.lang, region: this.region },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/movie/upcoming`, {
+      page: String(page),
+      language: this.lang,
+      region: this.region,
+    })
   }
 
   getGenres(): Observable<{ id: number; name: string }[]> {
@@ -175,45 +158,26 @@ export class TmdbService {
   }
 
   searchMovies(query: string, page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/search/movie`, {
-        params: { query, page: String(page), include_adult: 'false', language: this.lang },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/search/movie`, {
+      query,
+      page: String(page),
+      include_adult: 'false',
+      language: this.lang,
+    })
   }
 
   getTrending(page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/trending/movie/week`, {
-        params: { page: String(page), language: this.lang },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/trending/movie/week`, {
+      page: String(page),
+      language: this.lang,
+    })
   }
 
   getRecommendations(id: number, page = 1): Observable<PagedMovies> {
-    return this.http
-      .get<TmdbPagedResponseDto<TmdbMovieDto>>(`${this.base}/movie/${id}/recommendations`, {
-        params: { page: String(page), language: this.lang },
-      })
-      .pipe(
-        map((res) => ({
-          movies: res.results.map(adaptMovie),
-          totalPages: res.total_pages,
-          totalResults: res.total_results,
-        })),
-      )
+    return this._fetchMovieList(`${this.base}/movie/${id}/recommendations`, {
+      page: String(page),
+      language: this.lang,
+    })
   }
 
   getWatchProviders(id: number, countryCode = 'US'): Observable<WatchProvider[]> {
@@ -234,18 +198,17 @@ export class TmdbService {
     }).pipe(map(({ person, credits }) => adaptPerson(person, credits.cast)))
   }
 
+  getMovieReviews(id: number): Observable<MovieReview[]> {
+    return this.http
+      .get<TmdbReviewsResponseDto>(`${this.base}/movie/${id}/reviews`, {
+        params: { page: '1', language: this.lang },
+      })
+      .pipe(map((res) => res.results.slice(0, 5).map(adaptReview)))
+  }
+
   getMovieCredits(id: number): Observable<Actor[]> {
-    return this.http.get<TmdbCreditsDto>(`${this.base}/movie/${id}/credits`).pipe(
-      map((res) =>
-        res.cast.slice(0, 15).map((c) => ({
-          id: c.id,
-          name: c.name,
-          character: c.character,
-          profileUrl: c.profile_path
-            ? `${environment.tmdbImageBaseUrl}/w185${c.profile_path}`
-            : '/assets/images/no-profile.svg',
-        })),
-      ),
-    )
+    return this.http
+      .get<TmdbCreditsDto>(`${this.base}/movie/${id}/credits`)
+      .pipe(map((res) => res.cast.slice(0, MAX_CAST_MEMBERS).map(adaptActor)))
   }
 }

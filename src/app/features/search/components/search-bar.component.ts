@@ -25,11 +25,19 @@ export class SearchBarComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const el = this.searchInputRef.nativeElement
-    el.value = this.initialValue()
+    el.value = this.initialValue() ?? ''
     el.focus()
   }
 
   onInput(event: Event): void {
+    this.search.emit((event.target as HTMLInputElement).value)
+  }
+
+  // Handles the native `search` DOM event (fires on Enter or browser X in <input type="search">).
+  // stopPropagation prevents it from bubbling to the parent where (search)="onSearch($event)"
+  // would receive a DOM Event object instead of a string.
+  onNativeSearch(event: Event): void {
+    event.stopPropagation()
     this.search.emit((event.target as HTMLInputElement).value)
   }
 

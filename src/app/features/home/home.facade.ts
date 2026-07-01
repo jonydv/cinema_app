@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core'
 
 import { Movie } from '@data/models/movie.model'
 import { FavoritesStore } from '@store/favorites.store'
-import { MoviesStore } from '@store/movies.store'
+import { MovieSection, MoviesStore } from '@store/movies.store'
 import { NowPlayingStore } from '@store/now-playing.store'
 import { TopRatedStore } from '@store/top-rated.store'
 import { TrendingStore } from '@store/trending.store'
@@ -25,6 +25,7 @@ export class HomeFacade {
   readonly movies = this.moviesStore.movies
   readonly isLoading = this.moviesStore.isLoading
   readonly hasMore = this.moviesStore.hasMore
+  readonly activeSection = this.moviesStore.activeSection
   readonly activeGenre = this.moviesStore.activeGenre
   readonly sortBy = this.moviesStore.sortBy
   readonly yearFrom = this.moviesStore.yearFrom
@@ -79,6 +80,11 @@ export class HomeFacade {
 
   isWatched(id: number): boolean {
     return this.watchedStore.isWatched(id)
+  }
+
+  setSection(section: MovieSection): void {
+    this.moviesStore.setSection(section)
+    this.moviesStore.loadMovies()
   }
 
   setGenre(id: number | null): void {

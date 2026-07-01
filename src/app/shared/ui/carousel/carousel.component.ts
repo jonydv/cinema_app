@@ -1,22 +1,24 @@
-import { isPlatformBrowser } from '@angular/common'
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  PLATFORM_ID,
   ViewChild,
   inject,
   input,
   signal,
 } from '@angular/core'
 
+import { TranslocoModule, TranslocoService } from '@ngneat/transloco'
+
+import { isBrowser } from '@core/utils/platform'
+
 import { DragScrollDirective } from '@shared/ui/drag-scroll/drag-scroll.directive'
 
 @Component({
   selector: 'app-carousel',
   standalone: true,
-  imports: [DragScrollDirective],
+  imports: [DragScrollDirective, TranslocoModule],
   templateUrl: './carousel.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -29,10 +31,11 @@ export class CarouselComponent implements AfterViewInit {
   // Optimistic default: assume there's content to scroll right so button shows immediately
   protected readonly canScrollRight = signal(true)
 
-  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
+  private readonly browser = isBrowser()
+  protected readonly transloco = inject(TranslocoService)
 
   ngAfterViewInit(): void {
-    if (this.isBrowser) {
+    if (this.browser) {
       // Defer one tick so projected ng-content items are fully rendered before measuring
       setTimeout(() => this.updateScrollState(), 0)
     }

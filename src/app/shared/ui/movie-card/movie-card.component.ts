@@ -5,10 +5,12 @@ import { TranslocoModule } from '@ngneat/transloco'
 
 import { Movie } from '@data/models/movie.model'
 
+import { IconActionButtonComponent } from '@shared/ui/icon-action-button/icon-action-button.component'
+
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [RouterLink, TranslocoModule],
+  imports: [RouterLink, TranslocoModule, IconActionButtonComponent],
   templateUrl: './movie-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -27,21 +29,15 @@ export class MovieCardComponent {
     return String(count)
   }
 
-  onFavoriteClick(event: Event): void {
-    event.preventDefault()
-    event.stopPropagation()
+  onFavoriteClick(): void {
     this.favoriteToggled.emit(this.movie())
   }
 
-  onWatchlistClick(event: Event): void {
-    event.preventDefault()
-    event.stopPropagation()
+  onWatchlistClick(): void {
     this.watchlistToggled.emit(this.movie())
   }
 
-  onWatchedClick(event: Event): void {
-    event.preventDefault()
-    event.stopPropagation()
+  onWatchedClick(): void {
     this.watchedToggled.emit(this.movie())
   }
 }

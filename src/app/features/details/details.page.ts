@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common'
 import { ChangeDetectionStrategy, Component, effect, inject, input, OnDestroy } from '@angular/core'
 
 import { TranslocoModule } from '@ngneat/transloco'
@@ -10,18 +9,25 @@ import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.componen
 import { MovieCardComponent } from '@shared/ui/movie-card/movie-card.component'
 import { YoutubePlayerComponent } from '@shared/ui/youtube-player/youtube-player.component'
 
+import { DetailsActionsComponent } from './components/details-actions.component'
 import { DetailsBackdropComponent } from './components/details-backdrop.component'
 import { DetailsCastComponent } from './components/details-cast.component'
+import { DetailsRatingComponent } from './components/details-rating.component'
+import { DetailsRecentlyViewedComponent } from './components/details-recently-viewed.component'
+import { DetailsReviewsComponent } from './components/details-reviews.component'
 import { DetailsFacade } from './details.facade'
 
 @Component({
   selector: 'app-details-page',
   standalone: true,
   imports: [
-    DatePipe,
     TranslocoModule,
     DetailsBackdropComponent,
     DetailsCastComponent,
+    DetailsRatingComponent,
+    DetailsActionsComponent,
+    DetailsReviewsComponent,
+    DetailsRecentlyViewedComponent,
     YoutubePlayerComponent,
     EmptyStateComponent,
     MovieCardComponent,
@@ -44,6 +50,7 @@ export class DetailsPage implements OnDestroy {
     effect(() => {
       const movie = this.facade.movie()
       if (!movie) return
+      this.facade.addToRecentlyViewed(movie)
       this.seo.setPageTitle(movie.title)
       this.seo.setMetaDescription(movie.overview.slice(0, 160))
       this.seo.setOgImage(movie.backdropUrl)

@@ -7,7 +7,7 @@ import { SeoMetadataService } from '@core/seo/seo-metadata.service'
 
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component'
 import { MovieCardComponent } from '@shared/ui/movie-card/movie-card.component'
-import { SkeletonCardComponent } from '@shared/ui/skeleton-card/skeleton-card.component'
+import { MovieGridComponent } from '@shared/ui/movie-grid/movie-grid.component'
 
 import { SearchBarComponent } from './components/search-bar.component'
 import { SearchFacade } from './search.facade'
@@ -19,8 +19,8 @@ import { SearchFacade } from './search.facade'
     TranslocoModule,
     SearchBarComponent,
     MovieCardComponent,
-    SkeletonCardComponent,
     EmptyStateComponent,
+    MovieGridComponent,
   ],
   templateUrl: './search.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,13 +33,11 @@ export class SearchPage implements OnDestroy {
   /** Bound from the ?q= query param via withComponentInputBinding */
   readonly q = input<string>('')
 
-  protected readonly skeletonRange = Array.from({ length: 8 }, (_, i) => i)
-
   constructor() {
     this.seo.setPageTitle('Buscar películas')
 
     effect(() => {
-      const query = this.q()
+      const query = this.q() ?? ''
       if (query) {
         this.facade.search(query)
       } else {

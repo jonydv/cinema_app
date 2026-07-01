@@ -1,5 +1,7 @@
 import { computed, inject } from '@angular/core'
 
+export type MovieSection = 'popular' | 'top-rated' | 'now-playing' | 'upcoming'
+
 import { EMPTY, Observable, pipe } from 'rxjs'
 import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators'
 
@@ -25,6 +27,7 @@ export const MoviesStore = signalStore(
   { providedIn: 'root' },
   withTmdbList<Movie>(),
   withState({
+    activeSection: 'popular' as MovieSection,
     activeGenre: null as number | null,
     sortBy: 'popularity.desc',
     yearFrom: null as number | null,
@@ -46,7 +49,29 @@ export const MoviesStore = signalStore(
       store.minRuntime() !== null ||
       store.maxRuntime() !== null
 
+    const isTopRatedFiltered = (): boolean =>
+      store.activeGenre() !== null || store.yearFrom() !== null || store.yearTo() !== null
+
     const fetchPage = (page: number): Observable<PagedMovies> => {
+      const section = store.activeSection()
+      if (section === 'top-rated') {
+        if (isTopRatedFiltered()) {
+          return tmdbService.getDiscoverMovies(
+            page,
+            store.activeGenre(),
+            'vote_average.desc',
+            store.yearFrom(),
+            store.yearTo(),
+            0,
+            null,
+            null,
+            200,
+          )
+        }
+        return tmdbService.getTopRated(page)
+      }
+      if (section === 'now-playing') return tmdbService.getNowPlaying(page)
+      if (section === 'upcoming') return tmdbService.getUpcoming(page)
       if (isFiltered()) {
         return tmdbService.getDiscoverMovies(
           page,
@@ -100,6 +125,10 @@ export const MoviesStore = signalStore(
           }),
         ),
       ),
+
+      setSection(section: MovieSection): void {
+        patchState(store, { activeSection: section })
+      },
 
       setGenre(id: number | null): void {
         patchState(store, { activeGenre: id })

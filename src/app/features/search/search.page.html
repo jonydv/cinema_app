@@ -15,7 +15,7 @@
   }
 
   <!-- Results grid -->
-  <div class="grid grid-cols-2 gap-2 md:grid-cols-4 lg:grid-cols-5 md:gap-6">
+  <app-movie-grid [isLoading]="facade.isLoading()">
     @for (movie of facade.results(); track movie.id) {
       <app-movie-card
         [movie]="movie"
@@ -23,13 +23,7 @@
         (favoriteToggled)="facade.toggleFavorite($event)"
       />
     }
-
-    @if (facade.isLoading()) {
-      @for (i of skeletonRange; track i) {
-        <app-skeleton-card />
-      }
-    }
-  </div>
+  </app-movie-grid>
 
   <!-- Empty: searched but no results -->
   @if (!facade.isLoading() && facade.query() && facade.results().length === 0) {

@@ -90,9 +90,9 @@ describe('adaptActor', () => {
     expect(actor.profileUrl).toBe('https://image.tmdb.org/t/p/w185/profile.jpg')
   })
 
-  it('uses fallback profileUrl when profile_path is null', () => {
+  it('returns null profileUrl when profile_path is null', () => {
     const actor = adaptActor({ ...mockActorDto, profile_path: null })
-    expect(actor.profileUrl).toBe('/assets/images/no-profile.svg')
+    expect(actor.profileUrl).toBeNull()
   })
 })
 

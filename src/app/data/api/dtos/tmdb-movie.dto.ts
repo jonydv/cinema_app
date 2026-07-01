@@ -29,6 +29,29 @@ export interface TmdbMovieDetailDto extends Omit<TmdbMovieDto, 'genre_ids'> {
   budget: number
   revenue: number
   homepage: string | null
+  imdb_id: string | null
+}
+
+export interface TmdbReviewAuthorDetailsDto {
+  rating: number | null
+  avatar_path: string | null
+  username: string
+}
+
+export interface TmdbReviewDto {
+  id: string
+  author: string
+  author_details: TmdbReviewAuthorDetailsDto
+  content: string
+  created_at: string
+  url: string
+}
+
+export interface TmdbReviewsResponseDto {
+  id: number
+  results: TmdbReviewDto[]
+  total_pages: number
+  total_results: number
 }
 
 export interface TmdbCastMemberDto {

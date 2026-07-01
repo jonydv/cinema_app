@@ -38,7 +38,10 @@
     "markWatched": "Marcar como visto",
     "markUnwatched": "Quitar de vistos",
     "watched": "Visto",
-    "noTrailer": "Sin trailer disponible"
+    "noTrailer": "Sin trailer disponible",
+    "viewOnImdb": "Ver en IMDb",
+    "reviews": "Reseñas",
+    "recentlyViewed": "Vistas recientemente"
   },
   "favorites": {
     "title": "Mis favoritos",
@@ -97,7 +100,9 @@
     "profileAlt": "Foto de {{ name }}",
     "closeDialog": "Cerrar",
     "loading": "Cargando...",
-    "moviesLoaded": "{{ count }} películas cargadas"
+    "moviesLoaded": "{{ count }} películas cargadas",
+    "carouselPrev": "Anterior",
+    "carouselNext": "Siguiente"
   },
   "trending": {
     "title": "Tendencias de la semana"

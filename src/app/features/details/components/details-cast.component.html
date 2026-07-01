@@ -6,32 +6,58 @@
 
     <app-carousel scrollClass="gap-3 px-4 pb-2 md:px-6" role="list">
       @for (actor of cast(); track actor.id) {
-        <a
-          [routerLink]="['/person', actor.id]"
-          class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5 rounded-lg p-1 transition-opacity duration-200 md:hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-(--color-primary)"
-          role="listitem"
-        >
+        @if (actor.profileUrl) {
+          <a
+            [routerLink]="['/person', actor.id]"
+            class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5 rounded-lg p-1 transition-opacity duration-200 md:hover:opacity-80 focus:outline-none focus-visible:ring-2 focus-visible:ring-(--color-primary)"
+            role="listitem"
+          >
+            <div
+              class="relative size-[60px] overflow-hidden rounded-full bg-(--color-skeleton) ring-2 ring-black/5 dark:ring-white/5"
+            >
+              <img
+                [src]="actor.profileUrl"
+                [alt]="'a11y.profileAlt' | transloco: { name: actor.name }"
+                width="60"
+                height="60"
+                class="h-full w-full object-cover"
+                loading="lazy"
+              />
+            </div>
+            <span
+              class="line-clamp-2 text-center text-[10px] font-medium leading-tight text-(--color-text-primary)"
+            >
+              {{ actor.name }}
+            </span>
+            <span class="line-clamp-1 text-center text-[9px] text-(--color-text-secondary)">
+              {{ actor.character }}
+            </span>
+          </a>
+        } @else {
           <div
-            class="relative size-[60px] overflow-hidden rounded-full bg-(--color-skeleton) ring-2 ring-black/5 dark:ring-white/5"
+            class="flex w-[72px] shrink-0 snap-center flex-col items-center gap-1.5 rounded-lg p-1"
+            role="listitem"
           >
-            <img
-              [src]="actor.profileUrl"
-              [alt]="'a11y.profileAlt' | transloco: { name: actor.name }"
-              width="60"
-              height="60"
-              class="h-full w-full object-cover"
-              loading="lazy"
-            />
+            <div
+              class="relative size-[60px] overflow-hidden rounded-full ring-2 ring-black/5 dark:ring-white/5"
+            >
+              <span
+                class="flex h-full w-full select-none items-center justify-center bg-(--color-primary) text-sm font-bold text-white"
+                aria-hidden="true"
+              >
+                {{ initials(actor.name) }}
+              </span>
+            </div>
+            <span
+              class="line-clamp-2 text-center text-[10px] font-medium leading-tight text-(--color-text-secondary)"
+            >
+              {{ actor.name }}
+            </span>
+            <span class="line-clamp-1 text-center text-[9px] text-(--color-text-secondary)">
+              {{ actor.character }}
+            </span>
           </div>
-          <span
-            class="line-clamp-2 text-center text-[10px] font-medium leading-tight text-(--color-text-primary)"
-          >
-            {{ actor.name }}
-          </span>
-          <span class="line-clamp-1 text-center text-[9px] text-(--color-text-secondary)">
-            {{ actor.character }}
-          </span>
-        </a>
+        }
       }
     </app-carousel>
   </section>

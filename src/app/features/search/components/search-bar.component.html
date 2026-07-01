@@ -28,6 +28,7 @@
     [placeholder]="'search.placeholder' | transloco"
     autocomplete="off"
     (input)="onInput($event)"
+    (search)="onNativeSearch($event)"
   />
 
   <!-- Clear button — only visible when there is text -->

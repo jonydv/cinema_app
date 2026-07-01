@@ -5,12 +5,14 @@ import { TranslocoService, TranslocoModule } from '@ngneat/transloco'
 
 import { SeoMetadataService } from '@core/seo/seo-metadata.service'
 
+import { MovieSection } from '@store/movies.store'
+
 import { InfiniteScrollDirective } from '@shared/directives/infinite-scroll.directive'
-import { CarouselComponent } from '@shared/ui/carousel/carousel.component'
 import { EmptyStateComponent } from '@shared/ui/empty-state/empty-state.component'
 import { MovieCardComponent } from '@shared/ui/movie-card/movie-card.component'
 import { SkeletonCardComponent } from '@shared/ui/skeleton-card/skeleton-card.component'
 
+import { CarouselSectionComponent } from './components/carousel-section.component'
 import { HomeFiltersComponent } from './components/home-filters.component'
 import { HomeFacade } from './home.facade'
 
@@ -23,8 +25,8 @@ import { HomeFacade } from './home.facade'
     SkeletonCardComponent,
     EmptyStateComponent,
     InfiniteScrollDirective,
-    CarouselComponent,
     HomeFiltersComponent,
+    CarouselSectionComponent,
   ],
   templateUrl: './home.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +39,12 @@ export class HomePage implements OnInit {
 
   protected readonly skeletonRange = Array.from({ length: 8 }, (_, i) => i)
   protected readonly activeTab = signal<'popular' | 'discover'>('popular')
+  protected readonly sections: { key: MovieSection; label: string; icon: string }[] = [
+    { key: 'popular', label: 'home.popular', icon: '📊' },
+    { key: 'top-rated', label: 'home.topRated', icon: '⭐' },
+    { key: 'now-playing', label: 'home.nowPlaying', icon: '🎬' },
+    { key: 'upcoming', label: 'home.upcoming', icon: '📅' },
+  ]
 
   constructor() {
     effect(() => {
@@ -56,5 +64,9 @@ export class HomePage implements OnInit {
 
   protected onScrolled(): void {
     this.facade.loadMore()
+  }
+
+  protected onSectionChange(section: MovieSection): void {
+    this.facade.setSection(section)
   }
 }

@@ -17,7 +17,7 @@ export interface Actor {
   id: number
   name: string
   character: string
-  profileUrl: string
+  profileUrl: string | null
 }
 
 export interface MovieDetail extends Movie {
@@ -26,6 +26,16 @@ export interface MovieDetail extends Movie {
   runtime: number
   genres: string[]
   tagline: string
+  imdbId: string | null
+}
+
+export interface MovieReview {
+  id: string
+  author: string
+  rating: number | null
+  content: string
+  createdAt: string
+  url: string
 }
 
 export interface PagedMovies {

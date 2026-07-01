@@ -1,53 +1,7 @@
-import { inject } from '@angular/core'
-
-import { EMPTY, pipe } from 'rxjs'
-import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators'
-
-import { patchState, signalStore, withHooks, withMethods } from '@ngrx/signals'
-import { setAllEntities } from '@ngrx/signals/entities'
-import { rxMethod } from '@ngrx/signals/rxjs-interop'
-
-import { TranslocoService } from '@ngneat/transloco'
-
 import { TmdbService } from '@data/api/tmdb.service'
-import { Movie } from '@data/models/movie.model'
-import { setError, setLoaded, setLoading } from '@store/connectors/call-state.feature'
-import { withTmdbList } from '@store/connectors/tmdb-list.feature'
+import { createMovieListStore } from '@store/connectors/movie-list-store.factory'
 
-export const TopRatedStore = signalStore(
-  { providedIn: 'root' },
-  withTmdbList<Movie>(),
-  withMethods((store, tmdb = inject(TmdbService)) => ({
-    load: rxMethod<void>(
-      pipe(
-        tap(() =>
-          patchState(store, setLoading(), setAllEntities([] as Movie[]), { currentPage: 1 }),
-        ),
-        switchMap(() =>
-          tmdb.getTopRated(1).pipe(
-            tap(({ movies, totalPages }) =>
-              patchState(
-                store,
-                setAllEntities(movies),
-                { totalPages, currentPage: 1 },
-                setLoaded(),
-              ),
-            ),
-            catchError(() => {
-              patchState(store, setError('top_rated_load_failed'))
-              return EMPTY
-            }),
-          ),
-        ),
-      ),
-    ),
-  })),
-  withHooks({
-    onInit(store) {
-      store.load()
-      inject(TranslocoService)
-        .langChanges$.pipe(distinctUntilChanged())
-        .subscribe(() => store.load())
-    },
-  }),
+export const TopRatedStore = createMovieListStore(
+  (tmdb: TmdbService) => tmdb.getTopRated(1),
+  'top_rated_load_failed',
 )

@@ -1,11 +1,13 @@
 import { inject } from '@angular/core'
 
 import { EMPTY, pipe } from 'rxjs'
-import { catchError, switchMap, tap } from 'rxjs/operators'
+import { catchError, distinctUntilChanged, switchMap, tap } from 'rxjs/operators'
 
-import { patchState, signalStore, withMethods } from '@ngrx/signals'
+import { patchState, signalStore, withHooks, withMethods } from '@ngrx/signals'
 import { addEntities, setAllEntities } from '@ngrx/signals/entities'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
+
+import { TranslocoService } from '@ngneat/transloco'
 
 import { TmdbService } from '@data/api/tmdb.service'
 import { Movie } from '@data/models/movie.model'
@@ -32,7 +34,7 @@ export const TrendingStore = signalStore(
               ),
             ),
             catchError(() => {
-              patchState(store, setError('Error al cargar tendencias.'))
+              patchState(store, setError('trending_load_failed'))
               return EMPTY
             }),
           ),
@@ -54,4 +56,11 @@ export const TrendingStore = signalStore(
       ),
     ),
   })),
+  withHooks({
+    onInit(store) {
+      inject(TranslocoService)
+        .langChanges$.pipe(distinctUntilChanged())
+        .subscribe(() => store.load())
+    },
+  }),
 )

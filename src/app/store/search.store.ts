@@ -10,8 +10,10 @@ import {
   tap,
 } from 'rxjs/operators'
 
-import { patchState, signalStore, withMethods, withState } from '@ngrx/signals'
+import { patchState, signalStore, withHooks, withMethods, withState } from '@ngrx/signals'
 import { rxMethod } from '@ngrx/signals/rxjs-interop'
+
+import { TranslocoService } from '@ngneat/transloco'
 
 import { TmdbService } from '@data/api/tmdb.service'
 import { Movie } from '@data/models/movie.model'
@@ -53,4 +55,14 @@ export const SearchStore = signalStore(
       patchState(store, { query: '', results: [], totalResults: 0, callState: 'init' as CallState })
     },
   })),
+  withHooks({
+    onInit(store) {
+      inject(TranslocoService)
+        .langChanges$.pipe(distinctUntilChanged())
+        .subscribe(() => {
+          const q = store.query()
+          if (q.trim()) store.search(q)
+        })
+    },
+  }),
 )

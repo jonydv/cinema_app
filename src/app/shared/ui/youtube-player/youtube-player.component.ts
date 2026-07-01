@@ -1,16 +1,9 @@
-import { isPlatformBrowser } from '@angular/common'
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-  PLATFORM_ID,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core'
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 
 import { TranslocoModule } from '@ngneat/transloco'
+
+import { isBrowser } from '@core/utils/platform'
 
 @Component({
   selector: 'app-youtube-player',
@@ -23,7 +16,7 @@ export class YoutubePlayerComponent {
   readonly videoKey = input<string | null>(null)
 
   protected readonly playing = signal(false)
-  protected readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
+  protected readonly isBrowser = isBrowser()
 
   private readonly sanitizer = inject(DomSanitizer)
 
@@ -31,7 +24,7 @@ export class YoutubePlayerComponent {
     const key = this.videoKey()
     if (!key) return null
     return this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://www.youtube.com/embed/${key}?enablejsapi=1&rel=0`,
+      `https://www.youtube.com/embed/${key}?enablejsapi=1&rel=0&autoplay=1`,
     )
   })
 

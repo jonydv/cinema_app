@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core'
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop'
 
 import { switchMap } from 'rxjs/operators'
@@ -44,6 +44,8 @@ const DURATION_OPTIONS = [
 export class HomeFiltersComponent {
   protected readonly facade = inject(HomeFacade)
   private readonly tmdb = inject(TmdbService)
+
+  readonly mode = input<'all' | 'genre-year'>('all')
 
   protected readonly isOpen = signal(false)
   protected readonly genres = signal<{ id: number; name: string }[]>([])
@@ -111,9 +113,11 @@ export class HomeFiltersComponent {
   clearFilters(): void {
     this.facade.setGenre(null)
     this.facade.setYearRange(null, null)
-    this.facade.setMinRating(0)
-    this.facade.setRuntimeRange(null, null)
-    this.facade.setSortBy('popularity.desc')
+    if (this.mode() === 'all') {
+      this.facade.setMinRating(0)
+      this.facade.setRuntimeRange(null, null)
+      this.facade.setSortBy('popularity.desc')
+    }
     this.close()
   }
 

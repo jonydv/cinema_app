@@ -4,14 +4,25 @@ import {
   TmdbMovieDto,
   TmdbPersonDto,
   TmdbPersonMovieCreditDto,
+  TmdbReviewDto,
   TmdbVideoDto,
   TmdbWatchProvidersResponseDto,
 } from '@data/api/dtos/tmdb-movie.dto'
-import { Actor, Movie, MovieDetail, PersonDetail, WatchProvider } from '@data/models/movie.model'
+import {
+  Actor,
+  Movie,
+  MovieDetail,
+  MovieReview,
+  PersonDetail,
+  WatchProvider,
+} from '@data/models/movie.model'
 
 const BASE_IMG = 'https://image.tmdb.org/t/p'
 const FALLBACK_POSTER = '/assets/images/no-poster.svg'
 const FALLBACK_BACKDROP = ''
+
+export const MAX_CAST_MEMBERS = 15
+export const MAX_PERSON_CREDITS = 20
 
 export const adaptMovie = (dto: TmdbMovieDto): Movie => ({
   id: dto.id,
@@ -31,9 +42,7 @@ export const adaptActor = (dto: TmdbCastMemberDto): Actor => ({
   id: dto.id,
   name: dto.name,
   character: dto.character,
-  profileUrl: dto.profile_path
-    ? `${BASE_IMG}/w185${dto.profile_path}`
-    : '/assets/images/no-profile.svg',
+  profileUrl: dto.profile_path ? `${BASE_IMG}/w185${dto.profile_path}` : null,
 })
 
 export const adaptMovieDetail = (
@@ -56,13 +65,23 @@ export const adaptMovieDetail = (
   genres: dto.genres.map((g) => g.name),
   tagline: dto.tagline,
   trailerKey: resolveTrailerKey(videos),
-  cast: cast.slice(0, 15).map(adaptActor),
+  cast: cast.slice(0, MAX_CAST_MEMBERS).map(adaptActor),
+  imdbId: dto.imdb_id ?? null,
 })
 
 function resolveTrailerKey(videos: TmdbVideoDto[]): string | null {
   const trailer = videos.find((v) => v.site === 'YouTube' && v.type === 'Trailer' && v.official)
   return trailer?.key ?? videos.find((v) => v.site === 'YouTube')?.key ?? null
 }
+
+export const adaptReview = (dto: TmdbReviewDto): MovieReview => ({
+  id: dto.id,
+  author: dto.author,
+  rating: dto.author_details.rating,
+  content: dto.content,
+  createdAt: dto.created_at,
+  url: dto.url,
+})
 
 export const adaptWatchProviders = (
   dto: TmdbWatchProvidersResponseDto,
@@ -94,6 +113,6 @@ export const adaptPerson = (
   credits: credits
     .filter((c) => c.poster_path)
     .sort((a, b) => b.popularity - a.popularity)
-    .slice(0, 20)
+    .slice(0, MAX_PERSON_CREDITS)
     .map((c) => adaptMovie(c)),
 })
