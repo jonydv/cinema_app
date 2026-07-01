@@ -25,6 +25,7 @@ jobs:
 
       - name: Create stub environment files
         run: |
+          mkdir -p src/environments
           printf 'export const environment = {\n  production: false,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "",\n};\n' > src/environments/environment.ts
 
       - name: Lint
@@ -54,6 +55,7 @@ jobs:
         env:
           TMDB_BEARER_TOKEN: ${{ secrets.TMDB_BEARER_TOKEN }}
         run: |
+          mkdir -p src/environments
           printf 'export const environment = {\n  production: false,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "",\n};\n' > src/environments/environment.ts
           printf 'export const environment = {\n  production: true,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "%s",\n};\n' "$TMDB_BEARER_TOKEN" > src/environments/environment.prod.ts
 

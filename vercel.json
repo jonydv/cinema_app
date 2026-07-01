@@ -1,4 +1,4 @@
 {
-  "buildCommand": "npm run build",
+  "buildCommand": "mkdir -p src/environments && printf 'export const environment = {\\n  production: true,\\n  tmdbApiUrl: \"https://api.themoviedb.org/3\",\\n  tmdbImageBaseUrl: \"https://image.tmdb.org/t/p\",\\n  tmdbBearerToken: \"%s\",\\n};\\n' \"$TMDB_BEARER_TOKEN\" > src/environments/environment.prod.ts && printf 'export const environment = {\\n  production: false,\\n  tmdbApiUrl: \"https://api.themoviedb.org/3\",\\n  tmdbImageBaseUrl: \"https://image.tmdb.org/t/p\",\\n  tmdbBearerToken: \"\",\\n};\\n' > src/environments/environment.ts && npm run build",
   "framework": "angular"
 }
