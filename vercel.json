@@ -1,5 +1,4 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/movie-app-v2/browser",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "framework": "angular"
 }

@@ -81,22 +81,24 @@ describe('TmdbService — new endpoints', () => {
     expect(genres![0]).toEqual({ id: 28, name: 'Action' })
   })
 
-  it('getDiscoverMovies passes year as primary_release_year when provided', () => {
-    service.getDiscoverMovies(1, null, 'popularity.desc', 2022).subscribe()
+  it('getDiscoverMovies passes yearFrom/yearTo as date range when provided', () => {
+    service.getDiscoverMovies(1, null, 'popularity.desc', 2020, 2022).subscribe()
     const req = http.expectOne((r) => r.url.includes('/discover/movie'))
-    expect(req.request.params.get('primary_release_year')).toBe('2022')
+    expect(req.request.params.get('primary_release_date.gte')).toBe('2020-01-01')
+    expect(req.request.params.get('primary_release_date.lte')).toBe('2022-12-31')
     req.flush(emptyPaged)
   })
 
-  it('getDiscoverMovies omits primary_release_year when null', () => {
-    service.getDiscoverMovies(1, null, 'popularity.desc', null).subscribe()
+  it('getDiscoverMovies omits date range params when null', () => {
+    service.getDiscoverMovies(1, null, 'popularity.desc', null, null).subscribe()
     const req = http.expectOne((r) => r.url.includes('/discover/movie'))
-    expect(req.request.params.has('primary_release_year')).toBe(false)
+    expect(req.request.params.has('primary_release_date.gte')).toBe(false)
+    expect(req.request.params.has('primary_release_date.lte')).toBe(false)
     req.flush(emptyPaged)
   })
 
   it('getDiscoverMovies passes vote_average.gte when minRating > 0', () => {
-    service.getDiscoverMovies(1, null, 'popularity.desc', null, 7).subscribe()
+    service.getDiscoverMovies(1, null, 'popularity.desc', null, null, 7).subscribe()
     const req = http.expectOne((r) => r.url.includes('/discover/movie'))
     expect(req.request.params.get('vote_average.gte')).toBe('7')
     expect(req.request.params.get('vote_count.gte')).toBe('100')
@@ -104,7 +106,7 @@ describe('TmdbService — new endpoints', () => {
   })
 
   it('getDiscoverMovies passes runtime params when provided', () => {
-    service.getDiscoverMovies(1, null, 'popularity.desc', null, 0, 90, 150).subscribe()
+    service.getDiscoverMovies(1, null, 'popularity.desc', null, null, 0, 90, 150).subscribe()
     const req = http.expectOne((r) => r.url.includes('/discover/movie'))
     expect(req.request.params.get('with_runtime.gte')).toBe('90')
     expect(req.request.params.get('with_runtime.lte')).toBe('150')

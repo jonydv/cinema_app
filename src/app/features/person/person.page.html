@@ -2,14 +2,23 @@
   <div class="px-4 pb-24 pt-4 md:px-6 md:pb-10 md:pt-6">
     <!-- Profile header -->
     <div class="mb-6 flex gap-4 md:gap-6">
-      <img
-        [src]="person.profileUrl"
-        [alt]="'a11y.profileAlt' | transloco: { name: person.name }"
-        width="120"
-        height="180"
-        class="h-[150px] w-[100px] shrink-0 rounded-xl object-cover shadow-md ring-1 ring-black/10 md:h-[210px] md:w-[140px]"
-        loading="eager"
-      />
+      @if (person.profileUrl) {
+        <img
+          [src]="person.profileUrl"
+          [alt]="'a11y.profileAlt' | transloco: { name: person.name }"
+          width="120"
+          height="180"
+          class="h-[150px] w-[100px] shrink-0 rounded-xl object-cover shadow-md ring-1 ring-black/10 md:h-[210px] md:w-[140px]"
+          loading="eager"
+        />
+      } @else {
+        <div
+          class="flex h-[150px] w-[100px] shrink-0 items-center justify-center rounded-xl bg-(--color-skeleton) text-2xl font-bold text-(--color-text-secondary) shadow-md ring-1 ring-black/10 md:h-[210px] md:w-[140px]"
+          aria-hidden="true"
+        >
+          {{ person.name.charAt(0).toUpperCase() }}
+        </div>
+      }
 
       <div class="flex flex-col gap-2 pt-1">
         <h1 class="text-xl font-bold text-(--color-text-primary) md:text-2xl" tabindex="-1">

@@ -68,6 +68,7 @@ export class AppShellComponent implements OnInit {
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe((e) => {
+        if (!this.isBrowser) return
         const path = (e.urlAfterRedirects ?? e.url).split('?')[0] ?? ''
         if (path !== previousPath) {
           previousPath = path
