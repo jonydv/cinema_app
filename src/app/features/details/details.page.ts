@@ -53,7 +53,11 @@ export class DetailsPage implements OnDestroy {
       this.facade.addToRecentlyViewed(movie)
       this.seo.setPageTitle(movie.title)
       this.seo.setMetaDescription(movie.overview.slice(0, 160))
-      this.seo.setOgImage(movie.backdropUrl)
+      this.seo.setOgTags({
+        title: movie.title,
+        description: movie.overview.slice(0, 160),
+        imageUrl: movie.backdropUrl,
+      })
       this.seo.setJsonLd({
         '@context': 'https://schema.org',
         '@type': 'Movie',
