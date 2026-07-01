@@ -1,7 +1,7 @@
 {
-  "name": "MovieApp — Películas populares",
-  "short_name": "MovieApp",
-  "description": "Descubre y guarda tus películas favoritas",
+  "name": "CineScope — Películas populares",
+  "short_name": "CineScope",
+  "description": "Descubre y guarda tus películas favoritas con CineScope.",
   "theme_color": "#e50914",
   "background_color": "#141414",
   "display": "standalone",
