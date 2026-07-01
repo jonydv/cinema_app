@@ -24,9 +24,7 @@ jobs:
         run: npm ci
 
       - name: Create stub environment files
-        run: |
-          mkdir -p src/environments
-          printf 'export const environment = {\n  production: false,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "",\n};\n' > src/environments/environment.ts
+        run: node scripts/generate-env.js
 
       - name: Lint
         run: npm run lint
@@ -54,10 +52,7 @@ jobs:
       - name: Create environment files
         env:
           TMDB_BEARER_TOKEN: ${{ secrets.TMDB_BEARER_TOKEN }}
-        run: |
-          mkdir -p src/environments
-          printf 'export const environment = {\n  production: false,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "",\n};\n' > src/environments/environment.ts
-          printf 'export const environment = {\n  production: true,\n  tmdbApiUrl: "https://api.themoviedb.org/3",\n  tmdbImageBaseUrl: "https://image.tmdb.org/t/p",\n  tmdbBearerToken: "%s",\n};\n' "$TMDB_BEARER_TOKEN" > src/environments/environment.prod.ts
+        run: node scripts/generate-env.js
 
       - name: Build (production)
         run: npm run build:prod
