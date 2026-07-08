@@ -41,7 +41,12 @@
     "noTrailer": "No trailer available",
     "viewOnImdb": "View on IMDb",
     "reviews": "Reviews",
-    "recentlyViewed": "Recently Visited"
+    "recentlyViewed": "Recently Visited",
+    "share": "Share",
+    "shareWhatsapp": "WhatsApp",
+    "shareMail": "Email",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied!"
   },
   "favorites": {
     "title": "My Favorites",

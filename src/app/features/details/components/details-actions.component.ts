@@ -1,14 +1,18 @@
 import { DatePipe } from '@angular/common'
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core'
 
 import { TranslocoModule } from '@ngneat/transloco'
 
+import { ShareService } from '@core/services/share.service'
+
 import { MovieDetail } from '@data/models/movie.model'
+
+import { SharePopoverComponent } from './share-popover.component'
 
 @Component({
   selector: 'app-details-actions',
   standalone: true,
-  imports: [TranslocoModule, DatePipe],
+  imports: [TranslocoModule, DatePipe, SharePopoverComponent],
   template: `
     <!-- Watchlist button -->
     <section class="px-4 pb-4 md:px-6">
@@ -82,6 +86,38 @@ import { MovieDetail } from '@data/models/movie.model'
         }
       </button>
     </section>
+
+    <!-- Share button -->
+    <section class="px-4 pb-4 md:px-6">
+      <div class="relative">
+        <button
+          type="button"
+          class="flex min-h-[44px] items-center gap-2 rounded-xl border border-(--color-border) bg-(--color-surface) px-4 py-2 text-sm font-medium text-(--color-text-primary) transition-colors duration-200 md:hover:border-(--color-primary)"
+          (click)="onShareClick()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+            />
+          </svg>
+          {{ 'movie.share' | transloco }}
+        </button>
+
+        @if (isShareOpen()) {
+          <app-share-popover [movie]="movie()" (closed)="isShareOpen.set(false)" />
+        }
+      </div>
+    </section>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -93,4 +129,14 @@ export class DetailsActionsComponent {
 
   readonly watchlistToggled = output<MovieDetail>()
   readonly watchedToggled = output<MovieDetail>()
+
+  protected readonly isShareOpen = signal(false)
+  private readonly shareService = inject(ShareService)
+
+  protected async onShareClick(): Promise<void> {
+    const result = await this.shareService.nativeShare(this.movie())
+    if (result === 'unsupported') {
+      this.isShareOpen.set(true)
+    }
+  }
 }
