@@ -11,7 +11,7 @@ fs.writeFileSync(
   production: false,
   tmdbApiUrl: 'https://api.themoviedb.org/3',
   tmdbImageBaseUrl: 'https://image.tmdb.org/t/p',
-  tmdbBearerToken: '',
+  tmdbBearerToken: '${token}',
 }
 `
 )
