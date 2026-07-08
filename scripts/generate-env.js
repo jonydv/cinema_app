@@ -1,6 +1,8 @@
 const fs = require('fs')
 const token = process.env.TMDB_BEARER_TOKEN ?? ''
 
+console.log('[generate-env] TMDB_BEARER_TOKEN present:', !!token, '| length:', token.length)
+
 fs.mkdirSync('src/environments', { recursive: true })
 
 fs.writeFileSync(
